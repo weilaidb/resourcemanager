@@ -1,4 +1,6 @@
-#include <QtGui/QApplication>
+#include <QtGui>
+#include <QtGui/QApplicationStateChangeEvent>
+#include <QtWidgets/QApplication>
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
