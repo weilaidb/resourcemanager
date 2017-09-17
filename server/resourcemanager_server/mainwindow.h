@@ -39,7 +39,8 @@ public:
 
 public slots:
     void sendResourceInfoMessage();
-
+    void updateWriteClientProgress(qint64 numBytes);
+    void readClientMessage();
 
 private slots:
     void on_pushButton_clicked();
@@ -53,6 +54,15 @@ private:
     QString logs;
 
     QList<T_ResourceUse> lst_sources;
+
+    //写数据统计
+    qint64 TotalBytes;
+    qint64 byteWritten;
+    qint64 bytesToWrite;
+
+    QByteArray outBlock; //用于暂存我们要发送的数据
+
+    QTcpSocket *clientConnection;
 
 //UI
 private:

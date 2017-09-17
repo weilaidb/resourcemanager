@@ -23,6 +23,8 @@ public:
     void logsappendShow(QString log);
     int CheckIPAddr(QString ipaddr);
     void newConnect(QString ipaddr);
+    void hellosocket();
+    void updateClientProgress(qint64 numBytes);
 
 public slots:
     void readMessage();
@@ -52,6 +54,15 @@ private:
 //    qint64  fileNameSize;
     qint16  bytesNeedRecv;
     QByteArray inBlock;
+
+
+    //写数据统计
+    qint64 TotalBytes;
+    qint64 byteWritten;
+    qint64 bytesToWrite;
+
+    QByteArray outBlockFile;
+
 };
 
 

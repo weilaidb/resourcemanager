@@ -15,7 +15,10 @@ MainWindow::MainWindow(QWidget *parent) :
     SetIPADDR_UI();
     logs.clear();
     lst_sources.clear();
-
+    //写数据统计
+    TotalBytes   = 0;
+    byteWritten  = 0;
+    bytesToWrite = 0;
 
     ReadHistorySettings();
 
@@ -81,15 +84,17 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::sendResourceInfoMessage()
 {
-    QByteArray block; //用于暂存我们要发送的数据
-    QDataStream out(&block,QIODevice::WriteOnly);
+    outBlock.resize(0);
+    QDataStream out(&outBlock, QIODevice::WriteOnly);
+    out.resetStatus();
     //使用数据流写入数据
-    out.setVersion(QDataStream::Qt_4_0);
+    out.setVersion(QDataStream::Qt_4_3);
     //设置数据流的版本，客户端和服务器端使用的版本要相同
     //要发送的数据放到out
     QString sendstr("hello");
     out<<(quint16) 0;
-    out<<sendstr;
+    out<< ui->comboBox->currentText();
+    qDebug() << "send msgbf:" << ui->comboBox->currentText();
     quint16 skpos = 0;
 //    foreach(T_ResourceUse src, lst_sources)
 //    {
@@ -112,27 +117,61 @@ void MainWindow::sendResourceInfoMessage()
 
     //要发送的数据放到out
     out.device()->seek(0);
-    out<<(quint16)(block.size()-sizeof(quint16));
-    qDebug() << "@ block size :" << block.size();
+    out<<(quint16)(outBlock.size()-sizeof(quint16));
+    qDebug() << "@ block size :" << outBlock.size();
     //更新读写的位置
 //    skpos = block.size();
 
     //要发送的数据放到out
 
-    QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
+    clientConnection = tcpServer->nextPendingConnection();
     //我们获取已经建立的连接的子套接字
     connect(clientConnection,SIGNAL(disconnected()),clientConnection,SLOT(deleteLater()));
-    clientConnection->write(block);
+//    connect(clientConnection,SIGNAL(connected()),this,
+//                     SLOT(hellosocket()));
+    connect(clientConnection,SIGNAL(bytesWritten(qint64)),this,
+                     SLOT(updateWriteClientProgress(qint64)));
+    connect(clientConnection,SIGNAL(readyRead()), this,
+            SLOT(readClientMessage()));
+
+//    qDebug() << "send msg:" << block.at(2);
+    clientConnection->write(outBlock);
 
 //    clientConnection->disconnectFromHost();
 
     ui->statusBar->showMessage("send message successful!!!");
     logsappendShow(QString("got new client(%1), send msg size:%2")
                    .arg(clientConnection->peerAddress().toString())
-                   .arg(block.size()));
+                   .arg(outBlock.size()));
     //发送数据成功后，显示提示
 }
 
+
+/*============================================
+* FuncName    : autoCCode::updateWriteClientProgress
+* Description :
+* @numBytes   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
+void MainWindow::updateWriteClientProgress(qint64 numBytes)
+{
+    qDebug() << "numBytes:--------->>"<<numBytes;
+    byteWritten += (int)numBytes;
+    if(bytesToWrite > 0)
+    {
+        qDebug() <<"-->:outBlock size:" << outBlock.size();
+
+        bytesToWrite -= (int)clientConnection->write(outBlock);
+        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
+    }
+    else
+    {
+        qDebug() << "-->: send msg done!!";
+        TotalBytes = 0;
+        byteWritten = 0;
+    }
+}
 
 
 //void MainWindow::sendMessage()
