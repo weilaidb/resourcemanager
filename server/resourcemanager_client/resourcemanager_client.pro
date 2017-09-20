@@ -15,11 +15,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     msgtipsautoshut.cpp \
     msgtips.cpp \
-    sockthread.cpp
+    sockthread.cpp \
+    keybutton.cpp
 
 HEADERS  += mainwindow.h \
     msgtipsautoshut.h \
     msgtips.h \
-    sockthread.h
+    sockthread.h \
+    kouling.h \
+    keybutton.h
 
 FORMS    += mainwindow.ui

@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "sockthread.h"
 #include <QNetworkInterface>
 
 
@@ -90,8 +89,8 @@ void MainWindow::procClientMessage()
     qDebug() << "-->>client socket:" << clientConnection;
     sockthread *pthreadsock = new sockthread(this);
     pthreadsock->setSocketConnect(clientConnection);
-    QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString)),
-                     this,SLOT(readfromremote(QString)));
+    QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString,void*)),
+                     this,SLOT(readfromremote(QString, void *)));
     pthreadsock->start();
 
 
@@ -100,68 +99,6 @@ void MainWindow::procClientMessage()
                    .arg(clientConnection->peerAddress().toString()));
 }
 
-
-/*============================================
-* FuncName    : autoCCode::updateWriteClientProgress
-* Description :
-* @numBytes   :
-* Author      :
-* Time        : 2017-05-28
-============================================*/
-void MainWindow::updateWriteClientProgress(qint64 numBytes)
-{
-    qDebug() << "numBytes:--------->>"<<numBytes;
-    byteWritten += (int)numBytes;
-    if(bytesToWrite > 0)
-    {
-        qDebug() <<"-->:outBlock size:" << outBlock.size();
-
-        bytesToWrite -= (int)clientConnection->write(outBlock);
-        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
-    }
-    else
-    {
-        qDebug() << "-->: send msg done!!";
-        TotalBytes = 0;
-        byteWritten = 0;
-    }
-}
-
-void MainWindow::readClientMessage()
-{
-
-
-}
-
-
-//void MainWindow::sendMessage()
-//{
-//    QByteArray block; //用于暂存我们要发送的数据
-//    QDataStream out(&block,QIODevice::WriteOnly);
-//    //使用数据流写入数据
-//    out.setVersion(QDataStream::Qt_4_6);
-//    //设置数据流的版本，客户端和服务器端使用的版本要相同
-//    out<<(quint16) 0;
-//    //要发送的数据放到out
-//    out<<tr("hello Tcp!!!");
-//    //要发送的数据放到out
-//    out.device()->seek(0);
-//    out<<(quint16)(block.size()-sizeof(quint16));
-//    //要发送的数据放到out
-
-//    QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
-//    //我们获取已经建立的连接的子套接字
-//    connect(clientConnection,SIGNAL(disconnected()),clientConnection,SLOT(deleteLater()));
-//    clientConnection->write(block);
-
-//    clientConnection->disconnectFromHost();
-
-//    ui->statusBar->showMessage("send message successful!!!");
-//    logsappendShow(QString("got new client(%1), send msg size:%2")
-//                   .arg(clientConnection->peerAddress().toString())
-//                   .arg(block.size()));
-//    //发送数据成功后，显示提示
-//}
 
 /*============================================
 * FuncName    : MainWindow::ReadHistorySettings
@@ -408,8 +345,19 @@ void MainWindow::T_ResourceUse_Print(T_ResourceUse *p)
 }
 
 
-void MainWindow::readfromremote(QString cltmsg)
+void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
     logsappendShow(QString("read clt msg:%1").arg(cltmsg));
+    if(CMD_FETCH_SRC == cltmsg)
+    {
+        ReplyResourceInfo(pthread);
+    }
+}
+
+void MainWindow::ReplyResourceInfo(void * pthread)
+{
+    sockthread * inthread = (sockthread * )pthread;
+    inthread->sendmsg(CMD_REPLY_SRC);
+//    pthreadsock
 }
 

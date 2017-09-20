@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "sockthread.h"
+#include "kouling.h"
+#include "keybutton.h"
 
 using namespace std;
 
@@ -165,7 +167,9 @@ void MainWindow::newConnect(QString ipaddr)
         QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString)),
                          this,SLOT(procErrMsg(QString)));
         pthreadsock->start();
-        pthreadsock->sendmsg("Fetch SRC");
+
+//        ui->verticalLayout_resource->removeItem();
+
     }
 
 }
@@ -179,6 +183,7 @@ void MainWindow::newConnect(QString ipaddr)
 void MainWindow::hellosocket()
 {
     logsappendShow(QString::fromLocal8Bit("连接服务器成功！！"));
+    pthreadsock->sendmsg(CMD_FETCH_SRC);
 }
 
 void MainWindow::procErrMsg(QString errmsg)
@@ -190,7 +195,138 @@ void MainWindow::procErrMsg(QString errmsg)
 void MainWindow::readfromremote(QString cltmsg)
 {
     logsappendShow(QString("read clt msg:%1").arg(cltmsg));
+    if(cltmsg == CMD_REPLY_SRC)
+    {
+        qDebug() << "Show @ UI";
+        deleteBeforeShow();
+        showTitle();
+        QLabel *infolable = new QLabel;
+        infolable->setText(cltmsg);
+        infolable->show();
+
+        ui->verticalLayout_resource->addWidget(infolable);
+        showuilist.push_back(infolable);
+
+        QStringList opstime;
+        opstime << "day" <<  "am" << "pm";
+
+        QStringList usrlist;
+        usrlist << "" << str_china("小屁孩") <<  str_china("龙龙") << str_china("奇奇");
+
+        showOneRowUI("S3-2",
+                     "192.168.1.12",
+                     "70.70.70.70",
+                     opstime,
+                     1,
+                     usrlist,
+                     2,
+                     "beijing");
+
+//        setLayout(ui->verticalLayout_resource);
+
+
+    }
 }
 
+void MainWindow::showTitle()
+{
+
+    //devname  devip           netip          time   usr       notice
+    QLabel *title = new QLabel;
+    title->setText("devname      devip   netip          time   usr       notice");
+    // 设置字体：微软雅黑、点大小36
+    QFont font;
+    font.setFamily("Microsoft YaHei");
+    font.setPointSize(36);
+    font.setItalic(false);
+
+    title->setFont(font);
+    ui->verticalLayout_resource->addWidget(title);
+    showuilist.push_back(title);
+}
+
+void MainWindow::deleteBeforeShow()
+{
+    foreach (QWidget *q, showuilist) {
+        ui->verticalLayout_resource->removeWidget(q);
+        delete q;
+    }
+    showuilist.clear();
+
+}
+
+void MainWindow::showOneRowUI(QString devname,
+                              QString devip,
+                              QString netip,
+                              QStringList timelist,
+                              quint32 timeindex,
+                              QStringList usrlist,
+                              quint32 usrindex,
+                              QString notice)
+{
+    // 设置字体：微软雅黑、点大小36
+    QFont font;
+    font.setFamily("Microsoft YaHei");
+    font.setPointSize(30);
+    font.setItalic(false);
+
+#define SETFONT(WIDGET)\
+    WIDGET->setFont(font);
+
+
+    QLabel *pDevName = new QLabel(devname);
+    SETFONT(pDevName);
+    QLineEdit *pDevIP = new QLineEdit(devip);
+    SETFONT(pDevIP);
+    QLineEdit *pNetIP = new QLineEdit(netip);
+    SETFONT(pNetIP);
+
+    QComboBox *pTime = new QComboBox;
+    SETFONT(pTime);
+    pTime->addItems(timelist);
+    pTime->setCurrentIndex(timeindex);
+
+    QComboBox *pUsr = new QComboBox;
+    SETFONT(pUsr);
+    pUsr->addItems(usrlist);
+    pUsr->setCurrentIndex(usrindex);
+
+    QLineEdit *pNotice = new QLineEdit(notice);
+    SETFONT(pNotice);
+
+    KeyButton *prequestBtn = new KeyButton(QString(QString::fromLocal8Bit("申请") + devname));
+    connect(prequestBtn, SIGNAL(keyClicked(QString)), this, SLOT(Proc_RequestSrcItem(QString)));
+    SETFONT(prequestBtn);
+
+    //水平排列
+    QHBoxLayout *pHItemLay = new QHBoxLayout;
+    pHItemLay->addWidget(pDevName);
+    pHItemLay->addWidget(pDevIP);
+    pHItemLay->addWidget(pNetIP);
+    pHItemLay->addWidget(pTime);
+    pHItemLay->addWidget(pUsr);
+    pHItemLay->addWidget(pNotice);
+    pHItemLay->addWidget(prequestBtn);
+//    pHItemLay->addWidget(pDevName);
+
+
+
+
+    ui->verticalLayout_resource->addLayout(pHItemLay);
+
+    showuilist.push_back(pDevName);
+    showuilist.push_back(pDevIP);
+    showuilist.push_back(pNetIP);
+    showuilist.push_back(pTime);
+    showuilist.push_back(pUsr);
+    showuilist.push_back(pNotice);
+    showuilist.push_back(prequestBtn);
+
+}
+
+void MainWindow::Proc_RequestSrcItem(QString text)
+{
+    qDebug() << "btn pressed:" << str_china(text.toLocal8Bit().data());
+}
 
 

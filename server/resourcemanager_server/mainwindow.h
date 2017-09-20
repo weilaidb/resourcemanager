@@ -9,6 +9,7 @@
 #include "msgtips.h"
 #include "kouling.h"
 #include <QRegExp>
+#include "sockthread.h"
 
 namespace Ui {
 class MainWindow;
@@ -37,12 +38,12 @@ public:
 
 public slots:
     void procClientMessage();
-    void updateWriteClientProgress(qint64 numBytes);
-    void readClientMessage();
 
 
     void logsappendShow(QString log);
-    void readfromremote(QString cltmsg);
+    void readfromremote(QString cltmsg, void *pthread);
+
+    void ReplyResourceInfo(void *socket);
 
 private slots:
     void on_pushButton_clicked();

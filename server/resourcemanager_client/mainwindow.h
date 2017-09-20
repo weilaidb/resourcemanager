@@ -31,6 +31,10 @@ public slots:
     void readfromremote(QString cltmsg);
     void procErrMsg(QString errmsg);
 
+    void showTitle();
+    void deleteBeforeShow();
+    void showOneRowUI(QString devname, QString devip, QString netip, QStringList time, quint32 timeindex, QStringList usr, quint32 usrindex, QString notice);
+    void Proc_RequestSrcItem(QString text);
 
 private slots:
     void on_pushButton_clicked();
@@ -45,6 +49,9 @@ private:
     QString message;  //存放从服务器接收到的字符串
 
     sockthread *pthreadsock;
+
+private:
+    QList<QWidget *> showuilist;
 
 };
 

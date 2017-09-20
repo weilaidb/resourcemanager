@@ -30,6 +30,11 @@ sockthread::sockthread(QObject *parent) :
     bytesReceived  = 0;
     bytesNeedRecv  = 0;
 
+    //写数据统计
+    TotalBytes   = 0;
+    byteWritten  = 0;
+    bytesToWrite = 0;
+
 //    clientConnection = /*cltConnection*/;
 }
 
@@ -68,9 +73,10 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 {
     if(socketError == QTcpSocket::RemoteHostClosedError)
         return;
-    QMessageBox::information(NULL,str_china("网络"),
-                             str_china("产生如下错误： %1")
-                             .arg(clientConnection->errorString()));
+    emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()));
+//    QMessageBox::information(NULL,str_china("网络"),
+//                             str_china("产生如下错误： %1")
+//                             .arg(clientConnection->errorString()));
 //    tcpserver->close();
 //    tcpserver = NULL;
 
@@ -128,7 +134,7 @@ void sockthread::updateReadMsgProgress()
         QString  bigmsg = inBlock.mid(4); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
         //入库
 //        readfromremote(bigmsg);
-        emit emitMsgDoneSignal(bigmsg);
+        emit emitMsgDoneSignal(bigmsg, (void *)this);
         qDebug() << "read msg size:" << bigmsg.size();
 
         qDebug() << "read msg:" << bigmsg.toLocal8Bit();
@@ -147,6 +153,60 @@ void sockthread::updateReadMsgProgress()
 
 
 
+
+/*============================================
+* FuncName    : autoCCode::updateWriteClientProgress
+* Description :
+* @numBytes   :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
+void sockthread::updateWriteClientProgress(qint64 numBytes)
+{
+    static bool writeflag = WRITE_DONE;
+    qDebug() << "numBytes:--------->>"<<numBytes;
+    byteWritten += (int)numBytes;
+    if(bytesToWrite > 0)
+    {
+        qDebug() <<"-->:outBlock size:" << outBlock.size();
+
+        bytesToWrite -= (int)clientConnection->write(outBlock);
+        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
+        writeflag = WRITEING;
+    }
+    else
+    {
+        qDebug() << "-->: send msg done!!";
+        TotalBytes = 0;
+        byteWritten = 0;
+        writeflag = WRITE_DONE;
+    }
+}
+
+void sockthread::sendmsg(QString msgs)
+{
+    qDebug() << "write msg:" << msgs;
+
+    outBlock.resize(0); //用于暂存我们要发送的数据
+    QDataStream out(&outBlock, QIODevice::WriteOnly);
+    out.resetStatus();
+    out.setVersion(QDataStream::Qt_4_6);
+
+    //设置数据流的版本，客户端和服务器端使用的版本要相同
+    out<<(quint64) 0;
+    //要发送的数据放到out
+    out<< msgs.toLocal8Bit().data(); //必须是转换后的字符
+//    out << "hello world";
+    out.device()->seek(0);
+    out<<(quint64)(outBlock.size()-sizeof(quint64));//计算发送数据的大小
+
+    TotalBytes = outBlock.size();
+
+    bytesToWrite = TotalBytes - clientConnection->write(outBlock);//将名称发出后，剩余图片大小
+    qDebug() << "TotalBytes:" << TotalBytes;
+    qDebug() << "bytesToWrite:" << bytesToWrite;
+}
+
 /*============================================
 * FuncName    : sockthread::setSocketConnect
 * Description :
@@ -159,6 +219,8 @@ void sockthread::setSocketConnect(QTcpSocket *cltConnet)
     clientConnection = cltConnet;
     QObject::connect(clientConnection,SIGNAL(readyRead()),
                      this,SLOT(updateReadMsgProgress()));
+    QObject::connect(clientConnection,SIGNAL(bytesWritten(qint64)),
+                     this,SLOT(updateWriteClientProgress(qint64)));
     QObject::connect(clientConnection,SIGNAL(error(QAbstractSocket::SocketError)),
                      this,SLOT(displayErr(QAbstractSocket::SocketError)));
 

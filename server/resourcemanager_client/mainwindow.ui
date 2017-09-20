@@ -97,13 +97,6 @@
     <item row="3" column="0">
      <widget class="QTextBrowser" name="textBrowser"/>
     </item>
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>GroupBox</string>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="0">
      <spacer name="verticalSpacer">
       <property name="orientation">
@@ -117,10 +110,13 @@
       </property>
      </spacer>
     </item>
+    <item row="1" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_resource"/>
+    </item>
    </layout>
    <zorder>textBrowser</zorder>
-   <zorder>groupBox</zorder>
    <zorder>verticalSpacer</zorder>
+   <zorder>verticalLayoutWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

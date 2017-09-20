@@ -131,10 +131,13 @@ void sockthread::updateReadMsgProgress()
     }
 
     if (bytesReceived == TotalReadBytes) {
-        QString  bigmsg = inBlock;
+        QString  bigmsg = inBlock.mid(4); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
         //入库
 //        readfromremote(bigmsg);
         emit emitMsgDoneSignal(bigmsg);
+        qDebug() << "read msg size:" << bigmsg.size();
+
+        qDebug() << "read msg:" << bigmsg.toLocal8Bit();
 
         TotalReadBytes = 0;
         bytesReceived = 0;
@@ -192,8 +195,8 @@ void sockthread::sendmsg(QString msgs)
     //设置数据流的版本，客户端和服务器端使用的版本要相同
     out<<(quint64) 0;
     //要发送的数据放到out
-//    out<< msgs;
-    out << "hello world";
+    out<< msgs.toLocal8Bit().data(); //必须是转换后的字符
+//    out << "hello world";
     out.device()->seek(0);
     out<<(quint64)(outBlock.size()-sizeof(quint64));//计算发送数据的大小
 
