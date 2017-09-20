@@ -29,8 +29,6 @@ public:
     int CheckIPAddr(QString ipaddr);
     void SetIPADDR_UI();
 
-    void logsappendShow(QString log);
-
     int readResTxt(const char *filepath);
 
     int AppendResInfo(QString line);
@@ -41,6 +39,10 @@ public slots:
     void procClientMessage();
     void updateWriteClientProgress(qint64 numBytes);
     void readClientMessage();
+
+
+    void logsappendShow(QString log);
+    void readfromremote(QString cltmsg);
 
 private slots:
     void on_pushButton_clicked();

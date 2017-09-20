@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed Sep 20 20:54:25 2017
+** Created: Wed Sep 20 22:00:51 2017
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,8 +34,10 @@ static const uint qt_meta_data_MainWindow[] = {
       12,   11,   11,   11, 0x0a,
       41,   32,   11,   11, 0x0a,
       75,   11,   11,   11, 0x0a,
-      95,   11,   11,   11, 0x08,
-     119,   11,   11,   11, 0x08,
+      99,   95,   11,   11, 0x0a,
+     130,  123,   11,   11, 0x0a,
+     154,   11,   11,   11, 0x08,
+     178,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -43,7 +45,9 @@ static const uint qt_meta_data_MainWindow[] = {
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0procClientMessage()\0"
     "numBytes\0updateWriteClientProgress(qint64)\0"
-    "readClientMessage()\0on_pushButton_clicked()\0"
+    "readClientMessage()\0log\0logsappendShow(QString)\0"
+    "cltmsg\0readfromremote(QString)\0"
+    "on_pushButton_clicked()\0"
     "on_pushButton_flushipaddr_clicked()\0"
 };
 
@@ -79,11 +83,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 0: procClientMessage(); break;
         case 1: updateWriteClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
         case 2: readClientMessage(); break;
-        case 3: on_pushButton_clicked(); break;
-        case 4: on_pushButton_flushipaddr_clicked(); break;
+        case 3: logsappendShow((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 4: readfromremote((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 5: on_pushButton_clicked(); break;
+        case 6: on_pushButton_flushipaddr_clicked(); break;
         default: ;
         }
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }

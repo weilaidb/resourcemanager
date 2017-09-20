@@ -85,67 +85,19 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::procClientMessage()
 {
-    outBlock.resize(0);
-    QDataStream out(&outBlock, QIODevice::WriteOnly);
-    out.resetStatus();
-    //使用数据流写入数据
-    out.setVersion(QDataStream::Qt_4_3);
-    //设置数据流的版本，客户端和服务器端使用的版本要相同
-    //要发送的数据放到out
-    QString sendstr("hello");
-    out<<(quint16) 0;
-    out<< ui->comboBox->currentText();
-    qDebug() << "send msgbf:" << ui->comboBox->currentText();
-    quint16 skpos = 0;
-//    foreach(T_ResourceUse src, lst_sources)
-//    {
-
-//        T_ResourceUse_Print(&src);
-//        out << src.devname << " ";
-//        out << src.devip << " ";
-//        out << src.netip << " ";
-//        out << src.time << " ";
-//        out << src.usr << " ";
-//        out << src.notice << " ";
-//        out << src.right << " ";
-//        //要发送的数据放到out
-////        out.device()->seek(skpos);
-////        out<<(quint16)(block.size()-sizeof(quint16));
-//        qDebug() << "@ block size :" << block.size();
-//        //更新读写的位置
-////        skpos = block.size();
-//    }
-
-    //要发送的数据放到out
-    out.device()->seek(0);
-    out<<(quint16)(outBlock.size()-sizeof(quint16));
-    qDebug() << "@ block size :" << outBlock.size();
-    //更新读写的位置
-//    skpos = block.size();
-
-    //要发送的数据放到out
-
     clientConnection = tcpServer->nextPendingConnection();
-    sockthread *pcltHnd = new sockthread(0);
-    pcltHnd->setSocketConnect(clientConnection);
-//    //我们获取已经建立的连接的子套接字
-//    connect(clientConnection,SIGNAL(disconnected()),clientConnection,SLOT(deleteLater()));
-////    connect(clientConnection,SIGNAL(connected()),this,
-////                     SLOT(hellosocket()));
-//    connect(clientConnection,SIGNAL(bytesWritten(qint64)),this,
-//                     SLOT(updateWriteClientProgress(qint64)));
-//    connect(clientConnection,SIGNAL(readyRead()), this,
-//            SLOT(readClientMessage()));
 
-////    qDebug() << "send msg:" << block.at(2);
-//    clientConnection->write(outBlock);
+    qDebug() << "-->>client socket:" << clientConnection;
+    sockthread *pthreadsock = new sockthread(this);
+    pthreadsock->setSocketConnect(clientConnection);
+    QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString)),
+                     this,SLOT(readfromremote(QString)));
+    pthreadsock->start();
 
-//    clientConnection->disconnectFromHost();
 
-    ui->statusBar->showMessage("proc new client message!!!");
+    ui->statusBar->showMessage("proc new client message...");
     logsappendShow(QString("got new client(%1)")
                    .arg(clientConnection->peerAddress().toString()));
-    //发送数据成功后，显示提示
 }
 
 
@@ -455,4 +407,9 @@ void MainWindow::T_ResourceUse_Print(T_ResourceUse *p)
 
 }
 
+
+void MainWindow::readfromremote(QString cltmsg)
+{
+    logsappendShow(QString("read clt msg:%1").arg(cltmsg));
+}
 

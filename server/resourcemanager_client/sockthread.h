@@ -11,7 +11,11 @@ enum
 {
     READ_DONE,
     READING,
-    READ_OTHER
+    READ_OTHER,
+
+    WRITE_DONE,
+    WRITEING,
+    WRITE_OTHER
 };
 
 
@@ -21,13 +25,16 @@ class sockthread : public QThread
 public:
     explicit sockthread(QObject *parent = 0);
     void setSocketConnect(QTcpSocket *cltConnet);
+    void sendmsg(QString msgs);
     
 signals:
     void emitMsgDoneSignal(QString);
+    void emitErrInfo(QString);
     
 public slots:
     void displayErr(QAbstractSocket::SocketError socketError);
     void updateReadMsgProgress();
+    void updateWriteClientProgress(qint64 numBytes);
 
 protected:
     void run();
@@ -36,6 +43,14 @@ protected:
 
     QTcpSocket *clientConnection;
 
+    //写数据统计
+    qint64 TotalBytes;
+    qint64 byteWritten;
+    qint64 bytesToWrite;
+//    QString fileName;
+//    QFile *localFile;
+    QByteArray outBlock;
+    QByteArray outBlockFile;//文件字节序列
 
     //读数据统计
 //    qint64 TotalReadBytes;

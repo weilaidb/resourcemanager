@@ -94,7 +94,7 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 void sockthread::updateReadMsgProgress()
 {
     QDataStream in(clientConnection);
-    in.setVersion(QDataStream::Qt_4_0);
+    in.setVersion(QDataStream::Qt_4_6);
 
     static bool recvdone = READ_DONE;
 
@@ -125,10 +125,13 @@ void sockthread::updateReadMsgProgress()
     }
 
     if (bytesReceived == TotalReadBytes) {
-        QString  bigmsg = inBlock;
+        QString  bigmsg = inBlock.mid(4); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
         //入库
 //        readfromremote(bigmsg);
         emit emitMsgDoneSignal(bigmsg);
+        qDebug() << "read msg size:" << bigmsg.size();
+
+        qDebug() << "read msg:" << bigmsg.toLocal8Bit();
 
         TotalReadBytes = 0;
         bytesReceived = 0;

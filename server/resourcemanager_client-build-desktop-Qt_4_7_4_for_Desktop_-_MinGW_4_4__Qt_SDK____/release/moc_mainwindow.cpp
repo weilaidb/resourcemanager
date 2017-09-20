@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Sep 17 03:11:18 2017
+** Created: Wed Sep 20 22:04:31 2017
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -32,18 +32,17 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x0a,
-      26,   11,   11,   11, 0x0a,
-      62,   50,   11,   11, 0x0a,
-     103,   11,   11,   11, 0x08,
+      33,   26,   11,   11, 0x0a,
+      64,   57,   11,   11, 0x0a,
+      84,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0readMessage()\0"
-    "updateReadMsgProgress()\0socketError\0"
-    "displayErr(QAbstractSocket::SocketError)\0"
-    "on_pushButton_clicked()\0"
+    "MainWindow\0\0hellosocket()\0cltmsg\0"
+    "readfromremote(QString)\0errmsg\0"
+    "procErrMsg(QString)\0on_pushButton_clicked()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -75,9 +74,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: readMessage(); break;
-        case 1: updateReadMsgProgress(); break;
-        case 2: displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 0: hellosocket(); break;
+        case 1: readfromremote((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: procErrMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 3: on_pushButton_clicked(); break;
         default: ;
         }

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'sockthread.h'
 **
-** Created: Wed Sep 20 20:56:36 2017
+** Created: Wed Sep 20 22:22:12 2017
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,27 +23,31 @@ static const uint qt_meta_data_sockthread[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       1,       // signalCount
+       2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x05,
+      39,   11,   11,   11, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      51,   39,   11,   11, 0x0a,
-      92,   11,   11,   11, 0x0a,
+      72,   60,   11,   11, 0x0a,
+     113,   11,   11,   11, 0x0a,
+     146,  137,   11,   11, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_sockthread[] = {
     "sockthread\0\0emitMsgDoneSignal(QString)\0"
-    "socketError\0displayErr(QAbstractSocket::SocketError)\0"
-    "updateReadMsgProgress()\0"
+    "emitErrInfo(QString)\0socketError\0"
+    "displayErr(QAbstractSocket::SocketError)\0"
+    "updateReadMsgProgress()\0numBytes\0"
+    "updateWriteClientProgress(qint64)\0"
 };
 
 const QMetaObject sockthread::staticMetaObject = {
@@ -76,11 +80,13 @@ int sockthread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: emitMsgDoneSignal((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 1: displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 2: updateReadMsgProgress(); break;
+        case 1: emitErrInfo((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 3: updateReadMsgProgress(); break;
+        case 4: updateWriteClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
 }
@@ -90,5 +96,12 @@ void sockthread::emitMsgDoneSignal(QString _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
+}
+
+// SIGNAL 1
+void sockthread::emitErrInfo(QString _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_END_MOC_NAMESPACE

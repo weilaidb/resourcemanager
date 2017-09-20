@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Sep 17 02:18:09 2017
+** Created: Wed Sep 20 21:26:48 2017
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -44,8 +44,8 @@ public:
     QSpacerItem *horizontalSpacer;
     QPushButton *pushButton;
     QSpacerItem *horizontalSpacer_2;
-    QGroupBox *groupBox;
     QTextBrowser *textBrowser;
+    QGroupBox *groupBox;
     QSpacerItem *verticalSpacer;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -107,15 +107,15 @@ public:
 
         gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
 
-        groupBox = new QGroupBox(centralWidget);
-        groupBox->setObjectName(QString::fromUtf8("groupBox"));
-
-        gridLayout->addWidget(groupBox, 1, 0, 1, 1);
-
         textBrowser = new QTextBrowser(centralWidget);
         textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
 
         gridLayout->addWidget(textBrowser, 3, 0, 1, 1);
+
+        groupBox = new QGroupBox(centralWidget);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+
+        gridLayout->addWidget(groupBox, 1, 0, 1, 1);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -123,11 +123,10 @@ public:
 
         MainWindow->setCentralWidget(centralWidget);
         textBrowser->raise();
-        pushButton->raise();
         groupBox->raise();
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 476, 22));
+        menuBar->setGeometry(QRect(0, 0, 476, 23));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -145,7 +144,7 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\347\216\257\345\242\203\345\256\242\346\210\267\347\253\257", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\234\260\345\235\200", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "\350\277\236\346\216\245\346\234\215\345\212\241\345\231\250", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "\350\277\236\346\216\245\346\234\215\345\212\241\345\231\250\350\216\267\345\217\226\350\265\204\346\272\220", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("MainWindow", "GroupBox", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

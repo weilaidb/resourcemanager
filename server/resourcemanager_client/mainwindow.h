@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <QTcpSocket>
 #include <QAbstractSocket>
+#include "sockthread.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,13 +24,13 @@ public:
     void logsappendShow(QString log);
     int CheckIPAddr(QString ipaddr);
     void newConnect(QString ipaddr);
-    void hellosocket();
-    void updateClientProgress(qint64 numBytes);
+//    void initClientReceive();
 
 public slots:
-    void readMessage();
-    void updateReadMsgProgress();
-    void displayErr(QAbstractSocket::SocketError socketError);
+    void hellosocket();
+    void readfromremote(QString cltmsg);
+    void procErrMsg(QString errmsg);
+
 
 private slots:
     void on_pushButton_clicked();
@@ -40,28 +41,10 @@ private:
     Ui::MainWindow *ui;
 
 private:
-    QTcpSocket *tcpSocket;
-    quint16 blockSize;
+    QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
-    //读数据统计
-//    qint64 TotalReadBytes;
-//    qint64 byteReadden;
-//    qint64 bytesToRead;
-//    QByteArray outReadBlock;
 
-    qint16  TotalReadBytes;
-    qint16  bytesReceived;
-//    qint64  fileNameSize;
-    qint16  bytesNeedRecv;
-    QByteArray inBlock;
-
-
-    //写数据统计
-    qint64 TotalBytes;
-    qint64 byteWritten;
-    qint64 bytesToWrite;
-
-    QByteArray outBlockFile;
+    sockthread *pthreadsock;
 
 };
 
@@ -77,12 +60,6 @@ private:
 
 
 
-enum
-{
-    READ_DONE,
-    READING,
-    READ_OTHER
-};
 
 
 
