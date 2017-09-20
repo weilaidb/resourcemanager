@@ -38,7 +38,7 @@ public:
     void T_ResourceUse_Print(T_ResourceUse *p);
 
 public slots:
-    void sendResourceInfoMessage();
+    void procClientMessage();
     void updateWriteClientProgress(qint64 numBytes);
     void readClientMessage();
 

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Sep 17 03:09:37 2017
+** Created: Wed Sep 20 20:54:25 2017
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,17 +32,18 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x0a,
-      47,   38,   11,   11, 0x0a,
-      76,   11,   11,   11, 0x08,
-     100,   11,   11,   11, 0x08,
+      41,   32,   11,   11, 0x0a,
+      75,   11,   11,   11, 0x0a,
+      95,   11,   11,   11, 0x08,
+     119,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0sendResourceInfoMessage()\0"
-    "numBytes\0updateClientProgress(qint64)\0"
-    "on_pushButton_clicked()\0"
+    "MainWindow\0\0procClientMessage()\0"
+    "numBytes\0updateWriteClientProgress(qint64)\0"
+    "readClientMessage()\0on_pushButton_clicked()\0"
     "on_pushButton_flushipaddr_clicked()\0"
 };
 
@@ -75,13 +76,14 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: sendResourceInfoMessage(); break;
-        case 1: updateClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
-        case 2: on_pushButton_clicked(); break;
-        case 3: on_pushButton_flushipaddr_clicked(); break;
+        case 0: procClientMessage(); break;
+        case 1: updateWriteClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
+        case 2: readClientMessage(); break;
+        case 3: on_pushButton_clicked(); break;
+        case 4: on_pushButton_flushipaddr_clicked(); break;
         default: ;
         }
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

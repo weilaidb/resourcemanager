@@ -14,10 +14,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     msgtipsautoshut.cpp \
-    msgtips.cpp
+    msgtips.cpp \
+    sockthread.cpp
 
 HEADERS  += mainwindow.h \
     msgtipsautoshut.h \
-    msgtips.h
+    msgtips.h \
+    sockthread.h
 
 FORMS    += mainwindow.ui

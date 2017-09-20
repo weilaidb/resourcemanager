@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "sockthread.h"
 #include <QNetworkInterface>
 
 
@@ -50,7 +51,7 @@ int MainWindow::InitServer( QString ipaddr, quint16 listenport)
         //        close();
         return -1;
     }
-    connect(tcpServer,SIGNAL(newConnection()),this,SLOT(sendResourceInfoMessage()));
+    connect(tcpServer,SIGNAL(newConnection()),this,SLOT(procClientMessage()));
     return 0;
 }
 
@@ -82,7 +83,7 @@ void MainWindow::on_pushButton_clicked()
 }
 
 
-void MainWindow::sendResourceInfoMessage()
+void MainWindow::procClientMessage()
 {
     outBlock.resize(0);
     QDataStream out(&outBlock, QIODevice::WriteOnly);
@@ -125,24 +126,25 @@ void MainWindow::sendResourceInfoMessage()
     //要发送的数据放到out
 
     clientConnection = tcpServer->nextPendingConnection();
-    //我们获取已经建立的连接的子套接字
-    connect(clientConnection,SIGNAL(disconnected()),clientConnection,SLOT(deleteLater()));
-//    connect(clientConnection,SIGNAL(connected()),this,
-//                     SLOT(hellosocket()));
-    connect(clientConnection,SIGNAL(bytesWritten(qint64)),this,
-                     SLOT(updateWriteClientProgress(qint64)));
-    connect(clientConnection,SIGNAL(readyRead()), this,
-            SLOT(readClientMessage()));
+    sockthread *pcltHnd = new sockthread(0);
+    pcltHnd->setSocketConnect(clientConnection);
+//    //我们获取已经建立的连接的子套接字
+//    connect(clientConnection,SIGNAL(disconnected()),clientConnection,SLOT(deleteLater()));
+////    connect(clientConnection,SIGNAL(connected()),this,
+////                     SLOT(hellosocket()));
+//    connect(clientConnection,SIGNAL(bytesWritten(qint64)),this,
+//                     SLOT(updateWriteClientProgress(qint64)));
+//    connect(clientConnection,SIGNAL(readyRead()), this,
+//            SLOT(readClientMessage()));
 
-//    qDebug() << "send msg:" << block.at(2);
-    clientConnection->write(outBlock);
+////    qDebug() << "send msg:" << block.at(2);
+//    clientConnection->write(outBlock);
 
 //    clientConnection->disconnectFromHost();
 
-    ui->statusBar->showMessage("send message successful!!!");
-    logsappendShow(QString("got new client(%1), send msg size:%2")
-                   .arg(clientConnection->peerAddress().toString())
-                   .arg(outBlock.size()));
+    ui->statusBar->showMessage("proc new client message!!!");
+    logsappendShow(QString("got new client(%1)")
+                   .arg(clientConnection->peerAddress().toString()));
     //发送数据成功后，显示提示
 }
 
@@ -171,6 +173,12 @@ void MainWindow::updateWriteClientProgress(qint64 numBytes)
         TotalBytes = 0;
         byteWritten = 0;
     }
+}
+
+void MainWindow::readClientMessage()
+{
+
+
 }
 
 
