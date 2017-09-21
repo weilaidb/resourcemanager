@@ -44,6 +44,8 @@ public slots:
     void readfromremote(QString cltmsg, void *pthread);
 
     void ReplyResourceInfo(void *socket);
+    QString ComBineResource(void);
+    QString AddYinHao(QString str);
 
 private slots:
     void on_pushButton_clicked();
@@ -57,6 +59,7 @@ private:
     QString logs;
 
     QList<T_ResourceUse> lst_sources;
+    QList<T_ResourceUse>::iterator it_src;
 
     //写数据统计
     qint64 TotalBytes;

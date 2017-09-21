@@ -6,6 +6,14 @@
 #define BINDPORT (88888)
 #define RESOURCEPATH "./resource.txt"
 
+
+/**
+服务器侧环境信息的内容 RESOURCEPATH
+
+devname  devip           netip          time   usr       notice
+S3-2     10.85.159.20    70.70.70.70    day    xxxx     北京在使用
+S3-3     10.85.159.50    90.90.90.90    day    yyy
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -22,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ReadHistorySettings();
 
-//    readResTxt(RESOURCEPATH);
+    readResTxt(RESOURCEPATH);
 }
 
 MainWindow::~MainWindow()
@@ -283,6 +291,8 @@ int MainWindow::readResTxt(const char *filepath)
     while(!in.atEnd())     {
         QString line = in.readLine();
         qDebug() << line;
+        if(line.contains("devname"))
+            continue;
         AppendResInfo(line);
     }
     file.close();
@@ -295,6 +305,7 @@ QByteArray MainWindow::CMPINDEX(quint16 INDEX, QStringList &strlst)
     return ((INDEX < strlst.size()) ? (indexstr.toLatin1().data()) : (""));
 }
 
+//使用松散数据.csv "abc","s3-2","a,b,c,d"
 int MainWindow::AppendResInfo(QString line)
 {
 //#define CMPINDEX(INDEX, strlst)  \
@@ -307,25 +318,43 @@ int MainWindow::AppendResInfo(QString line)
     logsappendShow(QString("line splist size:%1").arg(strlst.size()));
 
     quint16 index = 0;
-    memcpy(tSrc.devname, CMPINDEX(index, strlst), sizeof(tSrc.devname));
-    index++;
-    memcpy(tSrc.devip, CMPINDEX(index, strlst), sizeof(tSrc.devip));
-    index++;
-    memcpy(tSrc.netip, CMPINDEX(index, strlst), sizeof(tSrc.netip));
-    index++;
-    memcpy(tSrc.time, CMPINDEX(index, strlst), sizeof(tSrc.time));
-    index++;
-    memcpy(tSrc.usr, CMPINDEX(index, strlst), sizeof(tSrc.usr));
-    index++;
-    memcpy(tSrc.notice, CMPINDEX(index, strlst), sizeof(tSrc.notice));
-    index++;
-    memcpy(tSrc.right, CMPINDEX(index, strlst), sizeof(tSrc.right));
-    index++;
+    for(index = 0; index < strlst.size(); index++)
+    {
+        switch( index )
+        {
+        case 0:
+            tSrc.devname = strlst.at(index);
+            break;
+        case 1:
+            tSrc.devip = strlst.at(index);
+            break;
+        case 2:
+            tSrc.netip = strlst.at(index);
+            break;
+        case 3:
+            tSrc.time = strlst.at(index);
+            break;
+        case 4:
+            tSrc.usr = strlst.at(index);
+            break;
+        case 5:
+            tSrc.notice = strlst.at(index);
+            break;
+        case 6:
+            tSrc.right = strlst.at(index);
+            break;
+        default:
+
+            break;
+        }
+
+    }
 
     T_ResourceUse_Print(&tSrc);
     lst_sources.push_back(tSrc);
     logsappendShow(QString("lst_sources size:%1").arg(lst_sources.size()));
 
+    ComBineResource();
 }
 
 
@@ -356,10 +385,42 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
     }
 }
 
+
 void MainWindow::ReplyResourceInfo(void * pthread)
 {
     sockthread * inthread = (sockthread * )pthread;
-    inthread->sendmsg(CMD_REPLY_SRC);
+
+    inthread->sendmsg(CMD_REPLY_SRC + ComBineResource());
 //    pthreadsock
 }
 
+QString MainWindow::ComBineResource()
+{
+#define ADDRESULT(VAL)\
+    result +=  AddYinHao(VAL) + ",";
+
+    QString result;
+    result.clear();
+//    lst_sources.size();
+    for(it_src = lst_sources.begin(); it_src != lst_sources.end(); it_src++)
+    {
+        T_ResourceUse &tmp = *it_src;
+        ADDRESULT(tmp.devname);
+        ADDRESULT(tmp.devip);
+        ADDRESULT(tmp.netip);
+        ADDRESULT(tmp.time);
+        ADDRESULT(tmp.usr);
+        ADDRESULT(tmp.notice);
+        ADDRESULT(tmp.right);
+    }
+
+    qDebug() << "combine resource result:" << result;
+
+    return result;
+}
+
+
+QString MainWindow::AddYinHao(QString str)
+{
+    return ("\"" + str.replace("\"", "") + "\"");
+}

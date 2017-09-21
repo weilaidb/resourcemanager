@@ -3,7 +3,7 @@
 # Project created by QtCreator 2017-09-16T22:31:30
 #
 #-------------------------------------------------
-
+QT       += widgets
 QT       += core gui
 QT       += network
 

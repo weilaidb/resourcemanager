@@ -1,22 +1,26 @@
 #ifndef KOULING_H
 #define KOULING_H
 
+#include <QString>
+/* 映射关系
+ * 客户侧              服务侧
+** CMD_FETCH_SRC -->
+**               <-- CMD_REPLY_SRC
+*/
 //命令码
-#define CMD_FETCH_SRC "FETCH SRC"
-#define CMD_REPLY_SRC "REPLY SRC"
+#define CMD_FETCH_SRC "FETCH SRC" //客户侧取资源数据
+#define CMD_REPLY_SRC "REPLY SRC" //应答给客户侧回应
 
 
-
-#define INSIZE (64)
 
 typedef struct T_ResourceUse{
-    char devname[INSIZE];    /* 资源名称 */
-    char devip[INSIZE]  ;    /* 资源IP  */
-    char netip[INSIZE]  ;    /* 网元IP  */
-    char time[INSIZE]   ;    /* 申请时间 */
-    char usr[INSIZE]    ;    /* 用   户  */
-    char notice[INSIZE] ;    /* 备   注 */
-    char right[INSIZE] ;     /* 是否可用  */
+    QString devname;    /* 资源名称 */
+    QString devip  ;    /* 资源IP  */
+    QString netip  ;    /* 网元IP  */
+    QString time   ;    /* 申请时间 */
+    QString usr    ;    /* 用   户  */
+    QString notice ;    /* 备   注 */
+    QString right ;     /* 是否可用  */
 }T_ResourceUse, *P_ResourceUse;
 
 

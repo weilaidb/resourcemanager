@@ -8,6 +8,7 @@
 #include "sockthread.h"
 #include "kouling.h"
 #include "keybutton.h"
+#include <QtWidgets>
 
 using namespace std;
 
@@ -155,15 +156,10 @@ void MainWindow::newConnect(QString ipaddr)
     socket = new QTcpSocket;
     socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);//优化为最低延迟，后面的1代码启用该优化。
     socket->connectToHost(ipaddr, BINDPORT);
-
-    //当返回false时可以调用error来确定无法连接的原因
-    if(!socket->waitForConnected(3000))
-    {
-        logsappendShow(str_china("连接超时，请检查服务器地址是否正确"));
-        return;
-    }
-
     connect(socket, SIGNAL(connected()), this, SLOT(hellosocket()));
+
+
+
 
     qDebug() <<"socket err:" << socket->errorString();
     qDebug() <<"remote ip addr:" << ipaddr;
@@ -182,6 +178,15 @@ void MainWindow::newConnect(QString ipaddr)
 //        ui->verticalLayout_resource->removeItem();
 
     }
+
+    //当返回false时可以调用error来确定无法连接的原因
+    if(!socket->waitForConnected(3000))
+    {
+        logsappendShow(str_china("连接超时，请检查服务器地址是否正确"));
+        return;
+    }
+
+
 
 }
 /*============================================

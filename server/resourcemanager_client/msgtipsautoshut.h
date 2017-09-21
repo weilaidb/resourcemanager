@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QtGui>
+#include <QtWidgets>
 
 class MsgTipsAutoShut : public QWidget
 {

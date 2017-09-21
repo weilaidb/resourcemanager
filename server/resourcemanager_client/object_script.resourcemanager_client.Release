@@ -1,0 +1,12 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\msgtipsautoshut.o
+./release\msgtips.o
+./release\sockthread.o
+./release\keybutton.o
+./release\moc_mainwindow.o
+./release\moc_msgtipsautoshut.o
+./release\moc_sockthread.o
+./release\moc_keybutton.o
+);

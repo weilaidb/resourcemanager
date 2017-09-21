@@ -1,0 +1,12 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\msgtipsautoshut.o
+./debug\msgtips.o
+./debug\sockthread.o
+./debug\keybutton.o
+./debug\moc_mainwindow.o
+./debug\moc_msgtipsautoshut.o
+./debug\moc_sockthread.o
+./debug\moc_keybutton.o
+);

@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[15];
-    char stringdata[190];
+    QByteArrayData data[21];
+    char stringdata[206];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,27 +30,33 @@ struct qt_meta_stringdata_MainWindow_t {
 static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
     {
 QT_MOC_LITERAL(0, 0, 10),
-QT_MOC_LITERAL(1, 11, 17),
-QT_MOC_LITERAL(2, 29, 0),
-QT_MOC_LITERAL(3, 30, 14),
-QT_MOC_LITERAL(4, 45, 3),
-QT_MOC_LITERAL(5, 49, 14),
-QT_MOC_LITERAL(6, 64, 6),
-QT_MOC_LITERAL(7, 71, 7),
-QT_MOC_LITERAL(8, 79, 17),
-QT_MOC_LITERAL(9, 97, 6),
-QT_MOC_LITERAL(10, 104, 15),
-QT_MOC_LITERAL(11, 120, 9),
-QT_MOC_LITERAL(12, 130, 3),
-QT_MOC_LITERAL(13, 134, 21),
-QT_MOC_LITERAL(14, 156, 33)
+QT_MOC_LITERAL(1, 11, 11),
+QT_MOC_LITERAL(2, 23, 0),
+QT_MOC_LITERAL(3, 24, 14),
+QT_MOC_LITERAL(4, 39, 6),
+QT_MOC_LITERAL(5, 46, 10),
+QT_MOC_LITERAL(6, 57, 6),
+QT_MOC_LITERAL(7, 64, 9),
+QT_MOC_LITERAL(8, 74, 16),
+QT_MOC_LITERAL(9, 91, 12),
+QT_MOC_LITERAL(10, 104, 7),
+QT_MOC_LITERAL(11, 112, 5),
+QT_MOC_LITERAL(12, 118, 5),
+QT_MOC_LITERAL(13, 124, 4),
+QT_MOC_LITERAL(14, 129, 9),
+QT_MOC_LITERAL(15, 139, 3),
+QT_MOC_LITERAL(16, 143, 8),
+QT_MOC_LITERAL(17, 152, 6),
+QT_MOC_LITERAL(18, 159, 19),
+QT_MOC_LITERAL(19, 179, 4),
+QT_MOC_LITERAL(20, 184, 21)
     },
-    "MainWindow\0procClientMessage\0\0"
-    "logsappendShow\0log\0readfromremote\0"
-    "cltmsg\0pthread\0ReplyResourceInfo\0"
-    "socket\0ComBineResource\0AddYinHao\0str\0"
-    "on_pushButton_clicked\0"
-    "on_pushButton_flushipaddr_clicked"
+    "MainWindow\0hellosocket\0\0readfromremote\0"
+    "cltmsg\0procErrMsg\0errmsg\0showTitle\0"
+    "deleteBeforeShow\0showOneRowUI\0devname\0"
+    "devip\0netip\0time\0timeindex\0usr\0usrindex\0"
+    "notice\0Proc_RequestSrcItem\0text\0"
+    "on_pushButton_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -70,21 +76,21 @@ static const uint qt_meta_data_MainWindow[] = {
  // slots: name, argc, parameters, tag, flags
        1,    0,   54,    2, 0x0a /* Public */,
        3,    1,   55,    2, 0x0a /* Public */,
-       5,    2,   58,    2, 0x0a /* Public */,
-       8,    1,   63,    2, 0x0a /* Public */,
-      10,    0,   66,    2, 0x0a /* Public */,
-      11,    1,   67,    2, 0x0a /* Public */,
-      13,    0,   70,    2, 0x08 /* Private */,
-      14,    0,   71,    2, 0x08 /* Private */,
+       5,    1,   58,    2, 0x0a /* Public */,
+       7,    0,   61,    2, 0x0a /* Public */,
+       8,    0,   62,    2, 0x0a /* Public */,
+       9,    8,   63,    2, 0x0a /* Public */,
+      18,    1,   80,    2, 0x0a /* Public */,
+      20,    0,   83,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString,    4,
-    QMetaType::Void, QMetaType::QString, QMetaType::VoidStar,    6,    7,
-    QMetaType::Void, QMetaType::VoidStar,    9,
-    QMetaType::QString,
-    QMetaType::QString, QMetaType::QString,   12,
+    QMetaType::Void, QMetaType::QString,    6,
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QStringList, QMetaType::UInt, QMetaType::QStringList, QMetaType::UInt, QMetaType::QString,   10,   11,   12,   13,   14,   15,   16,   17,
+    QMetaType::Void, QMetaType::QString,   19,
     QMetaType::Void,
 
        0        // eod
@@ -95,16 +101,14 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     if (_c == QMetaObject::InvokeMetaMethod) {
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->procClientMessage(); break;
-        case 1: _t->logsappendShow((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 2: _t->readfromremote((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
-        case 3: _t->ReplyResourceInfo((*reinterpret_cast< void*(*)>(_a[1]))); break;
-        case 4: { QString _r = _t->ComBineResource();
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 5: { QString _r = _t->AddYinHao((*reinterpret_cast< QString(*)>(_a[1])));
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 6: _t->on_pushButton_clicked(); break;
-        case 7: _t->on_pushButton_flushipaddr_clicked(); break;
+        case 0: _t->hellosocket(); break;
+        case 1: _t->readfromremote((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: _t->procErrMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 3: _t->showTitle(); break;
+        case 4: _t->deleteBeforeShow(); break;
+        case 5: _t->showOneRowUI((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< QStringList(*)>(_a[4])),(*reinterpret_cast< quint32(*)>(_a[5])),(*reinterpret_cast< QStringList(*)>(_a[6])),(*reinterpret_cast< quint32(*)>(_a[7])),(*reinterpret_cast< QString(*)>(_a[8]))); break;
+        case 6: _t->Proc_RequestSrcItem((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 7: _t->on_pushButton_clicked(); break;
         default: ;
         }
     }
