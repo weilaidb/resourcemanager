@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ReadHistorySettings();
 
-    readResTxt(RESOURCEPATH);
+//    readResTxt(RESOURCEPATH);
 }
 
 MainWindow::~MainWindow()
@@ -193,13 +193,13 @@ QList<QString> MainWindow::Getifconfig(void)
     qDebug() << "Interface numbers:"
              <<QNetworkInterface::allInterfaces().count();
 
-    foreach (QNetworkInterface interface,
+    foreach (QNetworkInterface netinterface,
              QNetworkInterface::allInterfaces()) {
-        qDebug() << "Interface name:" << interface.name() <<endl
+        qDebug() << "Interface name:" << netinterface.name() <<endl
                  <<"Interface hardwareAddress:"
-                <<interface.hardwareAddress()<<endl
-               <<"entry numbers:" << interface.addressEntries().count();
-        foreach (QNetworkAddressEntry entry, interface.addressEntries()) {
+                <<netinterface.hardwareAddress()<<endl
+               <<"entry numbers:" << netinterface.addressEntries().count();
+        foreach (QNetworkAddressEntry entry, netinterface.addressEntries()) {
             QHostAddress broadcastAddress = entry.broadcast();
             qDebug() << "entry ip:" << entry.ip()
                      <<"entry netmask:" <<entry.netmask();

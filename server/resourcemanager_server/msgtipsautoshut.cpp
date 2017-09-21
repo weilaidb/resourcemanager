@@ -59,6 +59,7 @@ void MsgTipsAutoShut::SetTipsInfo(QString s)
 
 void MsgTipsAutoShut::closeEvent(QCloseEvent *event)
 {
+    event = event;
 //    QMessageBox::StandardButton button;
 //    button = QMessageBox::question(this, str_china("退出程序"),
 //        QString(str_china("警告：程序有一个任务正在运行中，是否结束操作退出?")),
