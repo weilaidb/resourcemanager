@@ -16,7 +16,7 @@ MsgTipsAutoShut::MsgTipsAutoShut()
 
 MsgTipsAutoShut::MsgTipsAutoShut(QWidget *parent) :
     QWidget(parent),
-    m_ultimeout(500)
+    m_ultimeout(2000)
 {
     setWindowFlags(Qt::FramelessWindowHint);
     label = new QLabel(this);

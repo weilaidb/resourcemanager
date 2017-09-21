@@ -70,12 +70,14 @@ void MainWindow::on_pushButton_clicked()
     if(0 != InitServer(ipaddr, BINDPORT))
     {
         ShowTipsInfo(str_china("绑定信息, 绑定失败"));
+        qApp->processEvents();
         logsappendShow(QString("bind addr(%1) fail!!").arg(ipaddr));
 
     }
     else
     {
         ShowTipsInfo(str_china("绑定信息, 绑定成功"));
+        qApp->processEvents();
         logsappendShow(QString("bind addr(%1) ok").arg(ipaddr));
     }
 
