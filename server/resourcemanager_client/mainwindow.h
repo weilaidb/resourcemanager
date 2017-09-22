@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 #include <QAbstractSocket>
 #include "sockthread.h"
+#include "kouling.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,16 +27,26 @@ public:
     void newConnect(QString ipaddr);
 //    void initClientReceive();
 
+    void resizeEvent(QResizeEvent* event);
+    QStringList getusrlist();
+    QStringList getlistbydouhao(QString str);
+
 public slots:
     void hellosocket();
     void readfromremote(QString cltmsg);
     void procErrMsg(QString errmsg);
 
+
     void showTitle();
     void deleteBeforeShow();
-    void showOneRowUI(QString devname, QString devip, QString netip, QStringList time, quint32 timeindex, QStringList usr, quint32 usrindex, QString notice);
+    void showOneRowUI(QString devname, QString devip, QString netip, QStringList time, QString timeindex, QStringList usr, QString usrindex, QString notice);
     void Proc_RequestSrcItem(QString text);
 
+    void test_showoneresource(QString cltmsg);
+    void showResources(QString cltmsg);
+    void T_ResourceUse_Print(T_ResourceUse *p);
+
+    void setPushBtnEnable(QString st);
 private slots:
     void on_pushButton_clicked();
 
@@ -53,6 +64,10 @@ private:
 private:
     QList<QWidget *> showuilist;
 
+private:
+    QList<T_ResourceUse> lst_sources;
+    QList<T_ResourceUse>::iterator it_src;
+
 };
 
 
@@ -60,6 +75,7 @@ private:
 //±àÂëºº×Ö
 //#define str_china(A)     QString::fromLocal8Bit(#A)
 #define str_china(A)     QString::fromLocal8Bit(A)
+#define str_china_utf8(A)     QString::fromUtf8(A)
 //#define str_china(A)     QString::fromUtf8(#A)
 #else
 #define str_china(A)     codec->toUnicode(#A)

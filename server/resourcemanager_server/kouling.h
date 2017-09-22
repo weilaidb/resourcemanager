@@ -17,7 +17,9 @@ typedef struct T_ResourceUse{
     QString devname;    /* 资源名称 */
     QString devip  ;    /* 资源IP  */
     QString netip  ;    /* 网元IP  */
+    QString timelst;    /* 时间列表 */
     QString time   ;    /* 申请时间 */
+    QString usrlist;    /* 用户列表  */
     QString usr    ;    /* 用   户  */
     QString notice ;    /* 备   注 */
     QString right ;     /* 是否可用  */

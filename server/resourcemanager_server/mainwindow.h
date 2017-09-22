@@ -31,6 +31,11 @@ public:
     void SetIPADDR_UI();
 
     int readResTxt(const char *filepath);
+    int reLoadResource();
+
+    QString readUsrInfoTxt(const char *filepath);
+    int reLoadUsrList();
+    QStringList getusrlist();
 
     int AppendResInfo(QString line);
     QByteArray CMPINDEX(quint16 INDEX, QStringList &strlst);
@@ -60,6 +65,7 @@ private:
 
     QList<T_ResourceUse> lst_sources;
     QList<T_ResourceUse>::iterator it_src;
+    QString UserList;//用户列表
 
     //写数据统计
     qint64 TotalBytes;

@@ -5,6 +5,7 @@
 
 #define BINDPORT (88888)
 #define RESOURCEPATH "./resource.txt"
+#define USRLIST "./usrlist.txt"
 
 
 /**
@@ -21,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     SetIPADDR_UI();
-    logs.clear();
     lst_sources.clear();
     //写数据统计
     TotalBytes   = 0;
@@ -29,8 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     bytesToWrite = 0;
 
     ReadHistorySettings();
+    logs.clear();
 
-    readResTxt(RESOURCEPATH);
+    reLoadUsrList();
+    reLoadResource();
+
 }
 
 MainWindow::~MainWindow()
@@ -252,8 +255,10 @@ void MainWindow::SetIPADDR_UI()
 
 void MainWindow::on_pushButton_flushipaddr_clicked()
 {
-    logsappendShow(QString("flush ipaddr"));
+    logsappendShow(QString("flush ipaddr and reload resources infos"));
     SetIPADDR_UI();
+    reLoadResource();
+    reLoadUsrList();
 }
 
 void MainWindow::logsappendShow(QString log)
@@ -283,6 +288,7 @@ int MainWindow::readResTxt(const char *filepath)
         logsappendShow(errinfo);
         return -1;
     }
+    lst_sources.clear();
 
     file.open(QIODevice::ReadOnly);
 
@@ -298,6 +304,58 @@ int MainWindow::readResTxt(const char *filepath)
     file.close();
 
 }
+
+
+
+QString MainWindow::readUsrInfoTxt(const char *filepath)
+{
+    QString usrlist;
+    usrlist.clear();
+
+    QFile file(filepath);
+    if(!file.exists())
+    {
+        QString errinfo = QString("usrlist file no exist!! %1").arg(filepath);
+        ShowTipsInfo(errinfo);
+        logsappendShow(errinfo);
+        usrlist = "";
+        return usrlist;
+    }
+
+
+
+    file.open(QIODevice::ReadOnly);
+
+    QTextStream in(&file);
+    in.setCodec("UTF-8"); //请注意这行
+    while(!in.atEnd())     {
+        QString line = in.readLine();
+        qDebug() << line;
+        usrlist += line.replace("\"", "\"\"").simplified() + ",";
+    }
+    file.close();
+
+    usrlist = usrlist.left(usrlist.length() - 1 );
+
+    return usrlist;
+
+}
+
+int MainWindow::reLoadResource()
+{
+    readResTxt(RESOURCEPATH);
+    return 0;
+}
+
+int MainWindow::reLoadUsrList()
+{
+    UserList.clear();
+    UserList =  readUsrInfoTxt(USRLIST);
+    return 0;
+}
+
+
+
 QByteArray MainWindow::CMPINDEX(quint16 INDEX, QStringList &strlst)
 {
     QString indexstr = strlst.at(INDEX);
@@ -315,7 +373,7 @@ int MainWindow::AppendResInfo(QString line)
 
     T_ResourceUse tSrc = {0};
     QStringList strlst = line.split(QRegExp("\\s+"));
-    logsappendShow(QString("line splist size:%1").arg(strlst.size()));
+//    logsappendShow(QString("line splist size:%1").arg(strlst.size()));
 
     quint16 index = 0;
     for(index = 0; index < strlst.size(); index++)
@@ -350,9 +408,12 @@ int MainWindow::AppendResInfo(QString line)
 
     }
 
+    tSrc.timelst = "day,am,pm";
+    tSrc.usrlist = UserList;
+
     T_ResourceUse_Print(&tSrc);
     lst_sources.push_back(tSrc);
-    logsappendShow(QString("lst_sources size:%1").arg(lst_sources.size()));
+//    logsappendShow(QString("lst_sources size:%1").arg(lst_sources.size()));
 
     ComBineResource();
 }
@@ -373,6 +434,8 @@ void MainWindow::T_ResourceUse_Print(T_ResourceUse *p)
     qDebug() << "notice  :" << p->notice;
     qDebug() << "right   :" << p->right;
 
+    qDebug() << "timelist:" << p->timelst;
+    qDebug() << "usrlist :" << p->usrlist;
 }
 
 
@@ -408,10 +471,13 @@ QString MainWindow::ComBineResource()
         ADDRESULT(tmp.devname);
         ADDRESULT(tmp.devip);
         ADDRESULT(tmp.netip);
+        ADDRESULT(tmp.timelst);
         ADDRESULT(tmp.time);
+        ADDRESULT(tmp.usrlist);
         ADDRESULT(tmp.usr);
         ADDRESULT(tmp.notice);
         ADDRESULT(tmp.right);
+
     }
 
     qDebug() << "combine resource result:" << result;
@@ -422,5 +488,13 @@ QString MainWindow::ComBineResource()
 
 QString MainWindow::AddYinHao(QString str)
 {
-    return ("\"" + str.replace("\"", "") + "\"");
+    return ("\"" + str.replace("\"", "\"\"") + "\"");
 }
+
+QStringList MainWindow::getusrlist()
+{
+    QStringList usrlist;
+    usrlist << "" << str_china("小屁孩") <<  str_china("龙龙") << str_china("奇奇");
+    return usrlist;
+}
+

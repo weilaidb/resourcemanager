@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[21];
-    char stringdata[206];
+    QByteArrayData data[28];
+    char stringdata[298];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -49,14 +49,23 @@ QT_MOC_LITERAL(16, 143, 8),
 QT_MOC_LITERAL(17, 152, 6),
 QT_MOC_LITERAL(18, 159, 19),
 QT_MOC_LITERAL(19, 179, 4),
-QT_MOC_LITERAL(20, 184, 21)
+QT_MOC_LITERAL(20, 184, 20),
+QT_MOC_LITERAL(21, 205, 13),
+QT_MOC_LITERAL(22, 219, 19),
+QT_MOC_LITERAL(23, 239, 14),
+QT_MOC_LITERAL(24, 254, 1),
+QT_MOC_LITERAL(25, 256, 16),
+QT_MOC_LITERAL(26, 273, 2),
+QT_MOC_LITERAL(27, 276, 21)
     },
     "MainWindow\0hellosocket\0\0readfromremote\0"
     "cltmsg\0procErrMsg\0errmsg\0showTitle\0"
     "deleteBeforeShow\0showOneRowUI\0devname\0"
     "devip\0netip\0time\0timeindex\0usr\0usrindex\0"
     "notice\0Proc_RequestSrcItem\0text\0"
-    "on_pushButton_clicked"
+    "test_showoneresource\0showResources\0"
+    "T_ResourceUse_Print\0T_ResourceUse*\0p\0"
+    "setPushBtnEnable\0st\0on_pushButton_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -66,7 +75,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -74,14 +83,18 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   54,    2, 0x0a /* Public */,
-       3,    1,   55,    2, 0x0a /* Public */,
-       5,    1,   58,    2, 0x0a /* Public */,
-       7,    0,   61,    2, 0x0a /* Public */,
-       8,    0,   62,    2, 0x0a /* Public */,
-       9,    8,   63,    2, 0x0a /* Public */,
-      18,    1,   80,    2, 0x0a /* Public */,
-      20,    0,   83,    2, 0x08 /* Private */,
+       1,    0,   74,    2, 0x0a /* Public */,
+       3,    1,   75,    2, 0x0a /* Public */,
+       5,    1,   78,    2, 0x0a /* Public */,
+       7,    0,   81,    2, 0x0a /* Public */,
+       8,    0,   82,    2, 0x0a /* Public */,
+       9,    8,   83,    2, 0x0a /* Public */,
+      18,    1,  100,    2, 0x0a /* Public */,
+      20,    1,  103,    2, 0x0a /* Public */,
+      21,    1,  106,    2, 0x0a /* Public */,
+      22,    1,  109,    2, 0x0a /* Public */,
+      25,    1,  112,    2, 0x0a /* Public */,
+      27,    0,  115,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -89,8 +102,12 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, QMetaType::QString,    6,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QStringList, QMetaType::UInt, QMetaType::QStringList, QMetaType::UInt, QMetaType::QString,   10,   11,   12,   13,   14,   15,   16,   17,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QStringList, QMetaType::QString, QMetaType::QStringList, QMetaType::QString, QMetaType::QString,   10,   11,   12,   13,   14,   15,   16,   17,
     QMetaType::Void, QMetaType::QString,   19,
+    QMetaType::Void, QMetaType::QString,    4,
+    QMetaType::Void, QMetaType::QString,    4,
+    QMetaType::Void, 0x80000000 | 23,   24,
+    QMetaType::Void, QMetaType::QString,   26,
     QMetaType::Void,
 
        0        // eod
@@ -106,9 +123,13 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->procErrMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 3: _t->showTitle(); break;
         case 4: _t->deleteBeforeShow(); break;
-        case 5: _t->showOneRowUI((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< QStringList(*)>(_a[4])),(*reinterpret_cast< quint32(*)>(_a[5])),(*reinterpret_cast< QStringList(*)>(_a[6])),(*reinterpret_cast< quint32(*)>(_a[7])),(*reinterpret_cast< QString(*)>(_a[8]))); break;
+        case 5: _t->showOneRowUI((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< QStringList(*)>(_a[4])),(*reinterpret_cast< QString(*)>(_a[5])),(*reinterpret_cast< QStringList(*)>(_a[6])),(*reinterpret_cast< QString(*)>(_a[7])),(*reinterpret_cast< QString(*)>(_a[8]))); break;
         case 6: _t->Proc_RequestSrcItem((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 7: _t->on_pushButton_clicked(); break;
+        case 7: _t->test_showoneresource((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 8: _t->showResources((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 9: _t->T_ResourceUse_Print((*reinterpret_cast< T_ResourceUse*(*)>(_a[1]))); break;
+        case 10: _t->setPushBtnEnable((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 11: _t->on_pushButton_clicked(); break;
         default: ;
         }
     }
@@ -139,13 +160,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 12)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 8;
+        _id -= 12;
     }
     return _id;
 }

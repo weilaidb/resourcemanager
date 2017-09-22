@@ -21,9 +21,13 @@ MainWindow::MainWindow(QWidget *parent) :
     pthreadsock(NULL)
 {
     ui->setupUi(this);
-    logs.clear();
+    lst_sources.clear();
 
     ReadHistorySettings();
+    logs.clear();
+
+    QObject::connect(ui->comboBox, SIGNAL(currentTextChanged(QString)), this,
+                     SLOT(setPushBtnEnable(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -128,6 +132,7 @@ void MainWindow::on_pushButton_clicked()
     {
         return;
     }
+    ui->pushButton->setEnabled(false);
 
     socket = new QTcpSocket();
 
@@ -150,7 +155,7 @@ void MainWindow::newConnect(QString ipaddr)
             pthreadsock = NULL;
         }
     }
-    ShowTipsInfoWithShowTime(str_china("正在连接中..."), 3000);
+    ShowTipsInfoWithShowTime(str_china("正在连接中..."), 2000);
     qApp->processEvents();
 
     socket = new QTcpSocket;
@@ -175,7 +180,7 @@ void MainWindow::newConnect(QString ipaddr)
                          this,SLOT(procErrMsg(QString)));
         pthreadsock->start();
 
-//        ui->verticalLayout_resource->removeItem();
+        //        ui->verticalLayout_resource->removeItem();
 
     }
 
@@ -183,6 +188,7 @@ void MainWindow::newConnect(QString ipaddr)
     if(!socket->waitForConnected(3000))
     {
         logsappendShow(str_china("连接超时，请检查服务器地址是否正确"));
+        ui->pushButton->setEnabled(true);
         return;
     }
 
@@ -205,51 +211,159 @@ void MainWindow::hellosocket()
 void MainWindow::procErrMsg(QString errmsg)
 {
     logsappendShow(errmsg);
+    ui->pushButton->setEnabled(true);
 }
 
 
 void MainWindow::readfromremote(QString cltmsg)
 {
     logsappendShow(QString("read clt msg:%1").arg(cltmsg));
-    if(cltmsg == CMD_REPLY_SRC)
-    {
+    if(cltmsg.contains(CMD_REPLY_SRC))
+    {//处理收到的资源信息并显示到界面
         qDebug() << "Show @ UI";
         deleteBeforeShow();
         showTitle();
-        QLabel *infolable = new QLabel;
-        infolable->setText(cltmsg);
-        infolable->show();
-
-        ui->verticalLayout_resource->addWidget(infolable);
-        showuilist.push_back(infolable);
-
-        QStringList opstime;
-        opstime << "day" <<  "am" << "pm";
-
-        QStringList usrlist;
-        usrlist << "" << str_china("小屁孩") <<  str_china("龙龙") << str_china("奇奇");
-
-        showOneRowUI("S3-2",
-                     "192.168.1.12",
-                     "70.70.70.70",
-                     opstime,
-                     1,
-                     usrlist,
-                     2,
-                     "beijing");
-
-//        setLayout(ui->verticalLayout_resource);
+#ifdef TESTSHOW
+        test_showoneresource(cltmsg);
+#else
+        showResources(cltmsg.mid(strlen(CMD_REPLY_SRC)));
+#endif
+        //        setLayout(ui->verticalLayout_resource);
 
 
     }
 }
+
+
+void MainWindow::showResources(QString cltmsg)
+{
+    lst_sources.clear();
+
+    cltmsg = cltmsg.left(cltmsg.length() - 1);
+
+    QStringList splitmsg = cltmsg.mid(1).split("\",\"");
+    qDebug() << "splist cltmsg size:" << splitmsg.size();
+
+
+
+#define COLUMNSIZE (9)
+
+    quint16 index = 0;
+    T_ResourceUse tSrc = {0};
+    for(index = 0; index < splitmsg.size(); index++)
+    {
+        switch( index % COLUMNSIZE )
+        {
+        case 0:
+            tSrc.devname = splitmsg.at(index);
+            break;
+        case 1:
+            tSrc.devip = splitmsg.at(index);
+            break;
+        case 2:
+            tSrc.netip = splitmsg.at(index);
+            break;
+        case 3:
+            tSrc.timelst = splitmsg.at(index);
+            break;
+        case 4:
+            tSrc.time = splitmsg.at(index);
+            break;
+        case 5:
+            tSrc.usrlist = splitmsg.at(index);
+            break;
+        case 6:
+            tSrc.usr = splitmsg.at(index);
+            break;
+        case 7:
+            tSrc.notice = splitmsg.at(index);
+            break;
+        case 8:
+            tSrc.right = splitmsg.at(index);
+            break;
+        default:
+
+            break;
+        }
+        if((index + 1) % COLUMNSIZE == 0 && 0 != index)
+        {
+            T_ResourceUse_Print(&tSrc);
+            lst_sources.push_back(tSrc);
+        }
+
+    }
+
+    logsappendShow(QString("lst_sources size:%1").arg(lst_sources.size()));
+
+    //这个数据特别长了，导致整体界面变长，怪不得布局半天没效果呢
+    //    QLabel *infolable = new QLabel;
+    //    infolable->setText(cltmsg);
+    //    //    infolable->show();
+
+    //    ui->verticalLayout_resource->addWidget(infolable);
+    //    showuilist.push_back(infolable);
+
+    QStringList opstime;
+    opstime << "day" <<  "am" << "pm";
+
+    QStringList usrlist;
+    usrlist << "" << str_china("小屁孩") <<  str_china("龙龙") << str_china("奇奇");
+
+
+    //    lst_sources.size();
+    for(it_src = lst_sources.begin(); it_src != lst_sources.end(); it_src++)
+    {
+        T_ResourceUse &tmp = *it_src;
+        opstime  = getlistbydouhao(tmp.timelst);
+        usrlist  = getlistbydouhao(tmp.usrlist);
+        showOneRowUI(tmp.devname,
+                     tmp.devip,
+                     tmp.netip,
+                     opstime,
+                     tmp.time,
+                     usrlist,
+                     tmp.usr,
+                     tmp.notice);
+    }
+    //    this->update();
+    //    repaint();
+
+
+}
+
+void MainWindow::test_showoneresource(QString cltmsg)
+{
+    QLabel *infolable = new QLabel;
+    infolable->setText(cltmsg);
+    infolable->show();
+
+    ui->verticalLayout_resource->addWidget(infolable);
+    showuilist.push_back(infolable);
+
+    QStringList opstime;
+    opstime << "day" <<  "am" << "pm";
+
+    QStringList usrlist;
+    usrlist << "" << str_china("小屁孩") <<  str_china("龙龙") << str_china("奇奇");
+
+    showOneRowUI("S3-2",
+                 "192.168.1.12",
+                 "70.70.70.70",
+                 opstime,
+                 "day",
+                 usrlist,
+                 "weiwei",
+                 "beijing");
+}
+
+
 
 void MainWindow::showTitle()
 {
 
     //devname  devip           netip          time   usr       notice
     QLabel *title = new QLabel;
-    title->setText("devname      devip   netip          time   usr       notice");
+    title->setText(str_china("名称   设备IP   网元IP 申请时间  用户  备注"));
     // 设置字体：微软雅黑、点大小36
     QFont font;
     font.setFamily("Microsoft YaHei");
@@ -275,60 +389,91 @@ void MainWindow::showOneRowUI(QString devname,
                               QString devip,
                               QString netip,
                               QStringList timelist,
-                              quint32 timeindex,
+                              QString timeindex,
                               QStringList usrlist,
-                              quint32 usrindex,
+                              QString usrindex,
                               QString notice)
 {
-    // 设置字体：微软雅黑、点大小36
+    // 设置字体：微软雅黑、点大小16
     QFont font;
     font.setFamily("Microsoft YaHei");
-    font.setPointSize(30);
+    font.setPointSize(16);
     font.setItalic(false);
 
-#define SETFONT(WIDGET)\
-    WIDGET->setFont(font);
+#define SETFONT(WIDGET, WIDTHSIZE)\
+    WIDGET->setFont(font);\
+    WIDGET->setFixedWidth(WIDTHSIZE);
 
+#define CONVERT_CHIN(TEXT)\
+    str_china_utf8(TEXT.toUtf8().data())
 
-    QLabel *pDevName = new QLabel(devname);
-    SETFONT(pDevName);
-    QLineEdit *pDevIP = new QLineEdit(devip);
-    SETFONT(pDevIP);
-    QLineEdit *pNetIP = new QLineEdit(netip);
-    SETFONT(pNetIP);
+#define WIDTHSIZE (150)
+
+    QLabel *pDevName = new QLabel(CONVERT_CHIN(devname));
+    SETFONT(pDevName, WIDTHSIZE);
+    QLineEdit *pDevIP = new QLineEdit(CONVERT_CHIN(devip));
+    SETFONT(pDevIP, WIDTHSIZE);
+    QLineEdit *pNetIP = new QLineEdit(CONVERT_CHIN(netip));
+    SETFONT(pNetIP, WIDTHSIZE);
 
     QComboBox *pTime = new QComboBox;
-    SETFONT(pTime);
+    SETFONT(pTime, WIDTHSIZE);
     pTime->addItems(timelist);
-    pTime->setCurrentIndex(timeindex);
+    //    pTime->setCurrentIndex(timeindex);
+    pTime->setCurrentText(CONVERT_CHIN(timeindex));
 
     QComboBox *pUsr = new QComboBox;
-    SETFONT(pUsr);
+    SETFONT(pUsr, WIDTHSIZE);
     pUsr->addItems(usrlist);
-    pUsr->setCurrentIndex(usrindex);
+    //    pUsr->setCurrentIndex(usrindex);
+    pUsr->setCurrentText(CONVERT_CHIN(usrindex));
 
-    QLineEdit *pNotice = new QLineEdit(notice);
-    SETFONT(pNotice);
+    QLineEdit *pNotice = new QLineEdit(CONVERT_CHIN(notice));
+    pNotice->setFixedWidth(WIDTHSIZE * 2);
+    SETFONT(pNotice, WIDTHSIZE * 2);
 
     KeyButton *prequestBtn = new KeyButton(QString(QString::fromLocal8Bit("申请") + devname));
     connect(prequestBtn, SIGNAL(keyClicked(QString)), this, SLOT(Proc_RequestSrcItem(QString)));
-    SETFONT(prequestBtn);
+    SETFONT(prequestBtn, WIDTHSIZE);
 
     //水平排列
     QHBoxLayout *pHItemLay = new QHBoxLayout;
     pHItemLay->addWidget(pDevName);
+    pHItemLay->addStretch(30);
     pHItemLay->addWidget(pDevIP);
+    pHItemLay->addStretch(30);
     pHItemLay->addWidget(pNetIP);
+    pHItemLay->addStretch();
     pHItemLay->addWidget(pTime);
+    pHItemLay->addStretch();
     pHItemLay->addWidget(pUsr);
+    pHItemLay->addStretch();
     pHItemLay->addWidget(pNotice);
+    pHItemLay->addStretch();
     pHItemLay->addWidget(prequestBtn);
-//    pHItemLay->addWidget(pDevName);
+    pHItemLay->addStretch();
+    //    setHorizontalStretch();
+    //    pHItemLay->setAlignment(Qt::AlignLeft);
+    //    pHItemLay->layout();
+
+    //    pHItemLay->addWidget(pDevName);
 
 
+    //    QRect rect(0,100, 300, 400);
+    //    QDesktopWidget *desk=QApplication::desktop();
+    //    int wd=desk->width();
+    //    int ht=desk->height();
+    //    setMaximumSize(wd, ht);
 
+    //    ui->verticalLayout_resource->setGeometry(rect);
 
     ui->verticalLayout_resource->addLayout(pHItemLay);
+    ui->verticalLayout_resource->setSpacing(10);
+    //    MainWindow->resize(601, 390);
+    //    resize(601, 390);
+    //    repaint();
+    //    showMinimized();
+
 
     showuilist.push_back(pDevName);
     showuilist.push_back(pDevIP);
@@ -346,3 +491,67 @@ void MainWindow::Proc_RequestSrcItem(QString text)
 }
 
 
+
+
+
+void MainWindow::T_ResourceUse_Print(T_ResourceUse *p)
+{
+    if(!p)
+    {
+        return;
+    }
+    qDebug() << "=================";
+    qDebug() << "devname :" << p->devname;
+    qDebug() << "devip   :" << p->devip;
+    qDebug() << "netip   :" << p->netip;
+    qDebug() << "time    :" << p->time;
+    qDebug() << "usr     :" << p->usr;
+    qDebug() << "notice  :" << p->notice;
+    qDebug() << "right   :" << p->right;
+
+    qDebug() << "timelist:" << p->timelst;
+    qDebug() << "usrlist :" << p->usrlist;
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+    // Your code here
+    // Your code here
+    //    QDesktopWidget *desk=QApplication::desktop();
+    //    int wd=desk->width();
+    //    int ht=desk->height();
+    //    qDebug() << "ui->centralWidget size:" << ui->centralWidget->size() ;
+    //    ui->centralWidget->resize(wd, ht);
+    //    resize(wd, ht);
+    //    setGeometry(0,0,wd/2,ht/2);
+    //    ui->centralWidget->resize(ui->centralWidget->size());
+    //    update();
+    //    qDebug() << "wd():" << wd << "ht():"<< ht ;
+    //    qDebug() << "ui->centralWidget size:" << ui->centralWidget->size() ;
+
+    //     ui->centralWidget->resize(frameGeometry().size());
+    //     qDebug() << "frameGeometry().size():" << frameGeometry().size();
+    //    int width = ui->centralWidget->width(), height = ui->centralWidget->height();
+    //    ui->item->move(width * 0.25 - 80, (height - 320) / 2 - 8);
+    //    ui->item->move(width * 0.25 - 80, (height - 320) / 2 - 8);
+
+    //    setCentralWidget(this);
+}
+
+
+QStringList MainWindow::getlistbydouhao(QString str)
+{
+    QStringList lst;
+    lst.clear();
+    if(str.isEmpty())
+        return lst;
+    lst = str.split(",");
+    return lst;
+}
+
+
+void MainWindow::setPushBtnEnable(QString st)
+{
+    ui->pushButton->setEnabled(true);
+}
