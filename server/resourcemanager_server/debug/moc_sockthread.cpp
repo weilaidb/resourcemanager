@@ -62,16 +62,16 @@ static const uint qt_meta_data_sockthread[] = {
 
  // signals: name, argc, parameters, tag, flags
        1,    2,   39,    2, 0x06 /* Public */,
-       3,    1,   44,    2, 0x06 /* Public */,
+       3,    2,   44,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    1,   47,    2, 0x0a /* Public */,
-       7,    0,   50,    2, 0x0a /* Public */,
-       8,    1,   51,    2, 0x0a /* Public */,
+       4,    1,   49,    2, 0x0a /* Public */,
+       7,    0,   52,    2, 0x0a /* Public */,
+       8,    1,   53,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString, QMetaType::VoidStar,    2,    2,
-    QMetaType::Void, QMetaType::QString,    2,
+    QMetaType::Void, QMetaType::QString, QMetaType::VoidStar,    2,    2,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 5,    6,
@@ -87,7 +87,7 @@ void sockthread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         sockthread *_t = static_cast<sockthread *>(_o);
         switch (_id) {
         case 0: _t->emitMsgDoneSignal((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
-        case 1: _t->emitErrInfo((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 1: _t->emitErrInfo((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
         case 2: _t->displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
         case 3: _t->updateReadMsgProgress(); break;
         case 4: _t->updateWriteClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
@@ -114,7 +114,7 @@ void sockthread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             }
         }
         {
-            typedef void (sockthread::*_t)(QString );
+            typedef void (sockthread::*_t)(QString , void * );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&sockthread::emitErrInfo)) {
                 *result = 1;
             }
@@ -166,9 +166,9 @@ void sockthread::emitMsgDoneSignal(QString _t1, void * _t2)
 }
 
 // SIGNAL 1
-void sockthread::emitErrInfo(QString _t1)
+void sockthread::emitErrInfo(QString _t1, void * _t2)
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_END_MOC_NAMESPACE

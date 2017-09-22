@@ -363,11 +363,11 @@ void MainWindow::showTitle()
 
     //devname  devip           netip          time   usr       notice
     QLabel *title = new QLabel;
-    title->setText(str_china("名称   设备IP   网元IP 申请时间  用户  备注"));
+    title->setText(str_china("名称       设备IP      网元IP    申请时间    用户    备注"));
     // 设置字体：微软雅黑、点大小36
     QFont font;
     font.setFamily("Microsoft YaHei");
-    font.setPointSize(36);
+    font.setPointSize(30);
     font.setItalic(false);
 
     title->setFont(font);

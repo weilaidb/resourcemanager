@@ -29,7 +29,7 @@ public:
 
 signals:
     void emitMsgDoneSignal(QString, void *);
-    void emitErrInfo(QString);
+    void emitErrInfo(QString, void *);
 
 public slots:
     void displayErr(QAbstractSocket::SocketError socketError);

@@ -47,6 +47,8 @@ public slots:
 
     void logsappendShow(QString log);
     void readfromremote(QString cltmsg, void *pthread);
+    void replyclientwhenflush();
+    void dealclienterror(QString cltmsg, void * pthread);
 
     void ReplyResourceInfo(void *socket);
     QString ComBineResource(void);
@@ -67,6 +69,8 @@ private:
     QList<T_ResourceUse>::iterator it_src;
     QString UserList;//用户列表
 
+    QList<sockthread *> socklist;
+    QList<sockthread *>::iterator it_sklst;
     //写数据统计
     qint64 TotalBytes;
     qint64 byteWritten;

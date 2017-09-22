@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ReadHistorySettings();
     logs.clear();
+    socklist.clear();
 
     reLoadUsrList();
     reLoadResource();
@@ -83,6 +84,7 @@ void MainWindow::on_pushButton_clicked()
         ShowTipsInfo(str_china("绑定信息, 绑定失败"));
         qApp->processEvents();
         logsappendShow(QString("bind addr(%1) fail!!").arg(ipaddr));
+        ui->pushButton->setEnabled(true);
 
     }
     else
@@ -90,6 +92,7 @@ void MainWindow::on_pushButton_clicked()
         ShowTipsInfo(str_china("绑定信息, 绑定成功"));
         qApp->processEvents();
         logsappendShow(QString("bind addr(%1) ok").arg(ipaddr));
+        ui->pushButton->setEnabled(false);
     }
 
 }
@@ -104,7 +107,13 @@ void MainWindow::procClientMessage()
     pthreadsock->setSocketConnect(clientConnection);
     QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString,void*)),
                      this,SLOT(readfromremote(QString, void *)));
+    QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString,void*)),
+                     this,SLOT(dealclienterror(QString, void *)));
+
+
     pthreadsock->start();
+    socklist.push_back(pthreadsock);
+    qDebug() << "-->>socklist size:" << socklist.size();
 
 
     ui->statusBar->showMessage("proc new client message...");
@@ -259,6 +268,7 @@ void MainWindow::on_pushButton_flushipaddr_clicked()
     SetIPADDR_UI();
     reLoadResource();
     reLoadUsrList();
+    replyclientwhenflush();
 }
 
 void MainWindow::logsappendShow(QString log)
@@ -445,6 +455,39 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
     if(CMD_FETCH_SRC == cltmsg)
     {
         ReplyResourceInfo(pthread);
+    }
+}
+
+void MainWindow::dealclienterror(QString cltmsg, void * pthread)
+{
+    logsappendShow(QString("error clt msg:%1").arg(cltmsg));
+    sockthread * inthread = (sockthread * )pthread;
+
+    for(it_sklst = socklist.begin(); it_sklst != socklist.end(); )
+    {
+        if(inthread == *it_sklst)
+        {
+            qDebug() << "delete clt pthread :" << inthread;
+            socklist.erase(it_sklst);
+            break;
+        }
+        else
+        {
+            it_sklst++;
+        }
+    }
+}
+
+
+
+
+
+void MainWindow::replyclientwhenflush()
+{
+    qDebug() << "socklist size:" << socklist.size();
+    for(it_sklst = socklist.begin(); it_sklst != socklist.end(); it_sklst++)
+    {
+        readfromremote(CMD_FETCH_SRC, *it_sklst);
     }
 }
 
