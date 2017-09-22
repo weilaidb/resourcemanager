@@ -170,19 +170,6 @@ void MainWindow::newConnect(QString ipaddr)
     qDebug() <<"remote ip addr:" << ipaddr;
     logsappendShow(QString("connecting ip:%1").arg(ipaddr));
 
-    if(pthreadsock == NULL)
-    {
-        pthreadsock = new sockthread(this);
-        pthreadsock->setSocketConnect(socket);
-        QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString)),
-                         this,SLOT(readfromremote(QString)));
-        QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString)),
-                         this,SLOT(procErrMsg(QString)));
-        pthreadsock->start();
-
-        //        ui->verticalLayout_resource->removeItem();
-
-    }
 
     //当返回false时可以调用error来确定无法连接的原因
     if(!socket->waitForConnected(3000))
@@ -205,7 +192,24 @@ void MainWindow::newConnect(QString ipaddr)
 void MainWindow::hellosocket()
 {
     logsappendShow(QString::fromLocal8Bit("连接服务器成功！！"));
-    pthreadsock->sendmsg(CMD_FETCH_SRC);
+
+    if(pthreadsock == NULL)
+    {
+        pthreadsock = new sockthread(this);
+        pthreadsock->setSocketConnect(socket);
+        QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString)),
+                         this,SLOT(readfromremote(QString)));
+        QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString)),
+                         this,SLOT(procErrMsg(QString)));
+        pthreadsock->start();
+
+        //        ui->verticalLayout_resource->removeItem();
+
+        pthreadsock->sendmsg(CMD_FETCH_SRC);
+    }
+
+
+
 }
 
 void MainWindow::procErrMsg(QString errmsg)

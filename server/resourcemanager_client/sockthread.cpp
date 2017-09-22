@@ -71,8 +71,8 @@ void sockthread::run()
 ============================================*/
 void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 {
-    if(socketError == QTcpSocket::RemoteHostClosedError)
-        return;
+//    if(socketError == QTcpSocket::RemoteHostClosedError)
+//        return;
     emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()));
 //    QMessageBox::information(NULL,str_china("网络"),
 //                             str_china("产生如下错误： %1")

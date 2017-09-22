@@ -266,8 +266,8 @@ void MainWindow::on_pushButton_flushipaddr_clicked()
 {
     logsappendShow(QString("flush ipaddr and reload resources infos"));
     SetIPADDR_UI();
-    reLoadResource();
     reLoadUsrList();
+    reLoadResource();
     replyclientwhenflush();
 }
 
