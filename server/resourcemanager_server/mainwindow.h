@@ -62,6 +62,9 @@ public slots:
     QString AddYinHao(QString str);
     void enablebindpushtbn(QString str);
 
+    void Proc_DateChange();
+    void whendatechange_flushipaddr();
+
 private slots:
     void on_pushButton_clicked();
 
@@ -91,6 +94,9 @@ private:
 //UI
 private:
     Ui::MainWindow *ui;
+
+private:
+    QTimer *dateTimer;
 };
 
 

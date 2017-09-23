@@ -4,9 +4,9 @@
 
 
 #define BINDPORT (88888)
-#define RESOURCEPATH "./resource.txt"
-#define RESOURCEBACKPATH "./resource.txt.backup"
-#define USRLIST "./usrlist.txt"
+#define RESOURCEPATH "resource.txt"
+#define RESOURCEBACKPATH "resource.txt.backup"
+#define USRLIST "usrlist.txt"
 
 
 /**
@@ -19,7 +19,8 @@ S3-3     10.85.159.50    90.90.90.90    day    yyy
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    tcpServer(NULL)
+    tcpServer(NULL),
+    dateTimer(NULL)
 {
     ui->setupUi(this);
     SetIPADDR_UI();
@@ -39,6 +40,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->comboBox, SIGNAL(currentTextChanged(QString)), this,
                      SLOT(enablebindpushtbn(QString)));
 
+    dateTimer = new QTimer(this);
+    QObject::connect(dateTimer,SIGNAL(timeout()), this,
+                     SLOT(Proc_DateChange()));
+    dateTimer->start(1000 * 60 * 2);//2分钟检测一次时期是否变化
 }
 
 MainWindow::~MainWindow()
@@ -277,6 +282,17 @@ void MainWindow::on_pushButton_flushipaddr_clicked()
     replyclientwhenflush();
 }
 
+void MainWindow::whendatechange_flushipaddr()
+{
+    logsappendShow(QString("when date change flush ipaddr and reload resources infos"));
+//    SetIPADDR_UI();
+    reLoadUsrList();
+    reLoadResource();
+    replyclientwhenflush();
+}
+
+
+
 void MainWindow::logsappendShow(QString log)
 {
     QDate date;
@@ -318,7 +334,7 @@ int MainWindow::readResTxt(const char *filepath)
         AppendResInfo(line);
     }
     file.close();
-
+    return 0;
 }
 int MainWindow::writeResTxt(const char *filepath)
 {
@@ -412,12 +428,23 @@ QString MainWindow::readUsrInfoTxt(const char *filepath)
 
 int MainWindow::reLoadResource()
 {
-    readResTxt(RESOURCEPATH);
+    QDate date;
+    QString datename = date.currentDate().toString("rcmgryyyy-MM-dd");
+    QString filename = datename + RESOURCEPATH ;
+
+    if(0 != readResTxt(filename.toLocal8Bit().data()))
+    {
+        readResTxt(RESOURCEPATH);
+    }
     return 0;
 }
 int MainWindow::saveResource()
 {
-    writeResTxt(RESOURCEPATH);
+    QDate date;
+    QString datename = date.currentDate().toString("rcmgryyyy-MM-dd");
+    QString filename = datename + RESOURCEPATH ;
+
+    writeResTxt(filename.toLocal8Bit().data());
 
 //    writeResTxt(RESOURCEBACKPATH);
     return 0;
@@ -724,4 +751,21 @@ QStringList MainWindow::getusrlist()
 void MainWindow::enablebindpushtbn(QString str)
 {
     ui->pushButton->setEnabled(true);
+}
+
+void MainWindow::Proc_DateChange()
+{
+    static QString oldate;
+    QString curdate;
+    QDate date;
+    curdate = date.currentDate().toString("yyyy-MM-dd");
+
+    qDebug() << "oldate  date:" << oldate;
+    qDebug() << "current date:" << curdate;
+
+    if(curdate != oldate && !oldate.isEmpty())
+    {
+        whendatechange_flushipaddr();
+    }
+    oldate = curdate;
 }
