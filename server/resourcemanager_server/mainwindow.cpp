@@ -5,6 +5,7 @@
 
 #define BINDPORT (88888)
 #define RESOURCEPATH "./resource.txt"
+#define RESOURCEBACKPATH "./resource.txt.backup"
 #define USRLIST "./usrlist.txt"
 
 
@@ -35,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent) :
     reLoadUsrList();
     reLoadResource();
 
+    QObject::connect(ui->comboBox, SIGNAL(currentTextChanged(QString)), this,
+                     SLOT(enablebindpushtbn(QString)));
+
 }
 
 MainWindow::~MainWindow()
@@ -46,9 +50,10 @@ int MainWindow::InitServer( QString ipaddr, quint16 listenport)
 {
     if(NULL != tcpServer)
     {
+        closeallclientsocket();
         tcpServer->disconnect(this);
         tcpServer->close();
-        tcpServer->deleteLater();
+//        tcpServer->deleteLater();
         tcpServer = NULL;
     }
 
@@ -177,6 +182,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "MainWindow closeEvent";
     WriteCurrentSettings();
+    saveResource();
     event->accept();
 }
 
@@ -314,6 +320,59 @@ int MainWindow::readResTxt(const char *filepath)
     file.close();
 
 }
+int MainWindow::writeResTxt(const char *filepath)
+{
+    QFile file(filepath);
+//    if(!file.exists())
+//    {
+//        QString errinfo = QString("save resource file no exist!! %1").arg(filepath);
+//        ShowTipsInfo(errinfo);
+//        logsappendShow(errinfo);
+//        return -1;
+//    }
+//    lst_sources.clear();
+
+//    devname  devip           netip          time   usr       notice
+//    S3-1     10.85.159.20    70.70.70.70    day    佳佳     数据变更
+
+
+
+    file.open(QIODevice::WriteOnly);
+
+    QTextStream in(&file);
+    in.setCodec("UTF-8"); //请注意这行
+    QString TITLE= "devname  devip           netip          time   usr       notice right";
+    in << TITLE + "\n";
+
+#define ADDSPACE(VAL)\
+    result +=  (VAL) + "   ";
+
+    QString result;
+    result.clear();
+//    lst_sources.size();
+    for(it_src = lst_sources.begin(); it_src != lst_sources.end(); it_src++)
+    {
+        T_ResourceUse &tmp = *it_src;
+        result.clear();
+
+        ADDSPACE(tmp.devname);
+        ADDSPACE(tmp.devip);
+        ADDSPACE(tmp.netip);
+//        ADDSPACE(tmp.timelst);
+        ADDSPACE(tmp.time);
+//        ADDSPACE(tmp.usrlist);
+        ADDSPACE(tmp.usr);
+        ADDSPACE(tmp.notice);
+        ADDSPACE(tmp.right);
+        in << result + "\n";
+
+    }
+
+    file.close();
+
+    return 0;
+}
+
 
 
 
@@ -356,6 +415,15 @@ int MainWindow::reLoadResource()
     readResTxt(RESOURCEPATH);
     return 0;
 }
+int MainWindow::saveResource()
+{
+    writeResTxt(RESOURCEPATH);
+
+//    writeResTxt(RESOURCEBACKPATH);
+    return 0;
+}
+
+
 
 int MainWindow::reLoadUsrList()
 {
@@ -452,9 +520,21 @@ void MainWindow::T_ResourceUse_Print(T_ResourceUse *p)
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
     logsappendShow(QString("read clt msg:%1").arg(cltmsg));
-    if(CMD_FETCH_SRC == cltmsg)
+    qDebug() << (QString("read clt msg:%1").arg(cltmsg));
+    if(CMD_FETCH_SRC == cltmsg)//直接发送获取，没有报文体
     {
+        qDebug() << "clt  cmd code: CMD_FETCH_SRC";
         ReplyResourceInfo(pthread);
+    }
+    else if(cltmsg.contains((CMD_UPDATE_SRC)))
+    {
+        qDebug() << "clt  cmd code: CMD_UPDATE_SRC";
+        ReplyUpdateInfo(pthread, cltmsg.mid(sizeof(CMD_UPDATE_SRC) - 1));
+        saveResource();
+    }
+    else
+    {
+        qDebug() << "invalid cmd code";
     }
 }
 
@@ -478,6 +558,18 @@ void MainWindow::dealclienterror(QString cltmsg, void * pthread)
     }
 }
 
+void MainWindow::closeallclientsocket()
+{
+    logsappendShow(QString("close all clt socket"));
+
+
+    for(it_sklst = socklist.begin(); it_sklst != socklist.end(); it_sklst++)
+    {
+        sockthread * inthread = (sockthread * )*it_sklst;
+        inthread->closeSocketConnect();
+    }
+    socklist.clear();
+}
 
 
 
@@ -499,6 +591,18 @@ void MainWindow::ReplyResourceInfo(void * pthread)
     inthread->sendmsg(CMD_REPLY_SRC + ComBineResource());
 //    pthreadsock
 }
+
+void MainWindow::ReplyUpdateInfo(void *pthread, QString row)
+{
+    UpdateResources(row);
+    sockthread * inthread = (sockthread * )pthread;
+
+//    inthread->sendmsg(CMD_REPLY_SRC + ComBineResource());//依然回应全部资源信息
+    replyclientwhenflush();//全部连接客户端数据回应
+//    pthreadsock
+}
+
+
 
 QString MainWindow::ComBineResource()
 {
@@ -528,6 +632,81 @@ QString MainWindow::ComBineResource()
     return result;
 }
 
+void MainWindow::UpdateResources(QString row)
+{
+    QStringList splitmsg = row.mid(1).split("\",\"");
+    qDebug() << "splist clt's update msg size:" << splitmsg.size();
+
+
+
+#define COLUMNSIZE (9)
+
+    quint16 index = 0;
+    T_ResourceUse tSrc = {0};
+    for(index = 0; index < splitmsg.size(); index++)
+    {
+        switch( index % COLUMNSIZE )
+        {
+        case 0:
+            tSrc.devname = splitmsg.at(index);
+            break;
+        case 1:
+            tSrc.devip = splitmsg.at(index);
+            break;
+        case 2:
+            tSrc.netip = splitmsg.at(index);
+            break;
+        case 3:
+//            tSrc.timelst = splitmsg.at(index);
+            break;
+        case 4:
+            tSrc.time = splitmsg.at(index);
+            break;
+        case 5:
+//            tSrc.usrlist = splitmsg.at(index);
+            break;
+        case 6:
+            tSrc.usr = splitmsg.at(index);
+            break;
+        case 7:
+            tSrc.notice = splitmsg.at(index);
+            break;
+        case 8:
+            tSrc.right = splitmsg.at(index);
+            break;
+        default:
+
+            break;
+        }
+        if((index + 1) % COLUMNSIZE == 0 && 0 != index)
+        {
+            T_ResourceUse_Print(&tSrc);
+//            lst_sources.push_back(tSrc);
+        }
+
+    }
+
+
+
+
+
+    for(it_src = lst_sources.begin(); it_src != lst_sources.end(); it_src++)
+    {
+        T_ResourceUse &tmp = *it_src;
+        if(tmp.devname == tSrc.devname)
+        {
+            tmp.devname = tSrc.devname;
+            tmp.devip   = tSrc.devip;
+            tmp.netip   = tSrc.netip;
+            tmp.time    = tSrc.time;
+            tmp.usr     = tSrc.usr;
+            tmp.notice  = tSrc.notice;
+            tmp.right   = tSrc.right;
+            logsappendShow(QString("update src :%1").arg(tSrc.devname));
+            break;
+        }
+    }
+}
 
 QString MainWindow::AddYinHao(QString str)
 {
@@ -541,3 +720,8 @@ QStringList MainWindow::getusrlist()
     return usrlist;
 }
 
+
+void MainWindow::enablebindpushtbn(QString str)
+{
+    ui->pushButton->setEnabled(true);
+}

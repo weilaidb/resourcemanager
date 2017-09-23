@@ -26,6 +26,7 @@ public:
     explicit sockthread(QObject *parent = 0);
     void setSocketConnect(QTcpSocket *cltConnet);
     void sendmsg(QString msgs);
+    void closeSocketConnect();
 
 signals:
     void emitMsgDoneSignal(QString, void *);

@@ -93,7 +93,7 @@ debug/app_res.o: app.rc
 	windres -i app.rc -o debug\app_res.o --include-dir=. $(DEFINES)
 
 qmake: FORCE
-	@$(QMAKE) -spec win32-g++ CONFIG+=debug -o Makefile.Debug resourcemanager_server.pro
+	@$(QMAKE) -spec win32-g++ -o Makefile.Debug resourcemanager_server.pro
 
 qmake_all: FORCE
 

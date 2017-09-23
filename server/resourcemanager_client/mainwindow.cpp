@@ -202,9 +202,6 @@ void MainWindow::hellosocket()
         QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString,void*)),
                          this,SLOT(procErrMsg(QString,void*)));
         pthreadsock->start();
-
-        //        ui->verticalLayout_resource->removeItem();
-
         pthreadsock->sendmsg(CMD_FETCH_SRC);
     }
 
@@ -216,6 +213,12 @@ void MainWindow::procErrMsg(QString errmsg,void*)
 {
     logsappendShow(errmsg);
     ui->pushButton->setEnabled(true);
+
+    for(it_ShowUi = lst_ShowUi.begin(); it_ShowUi != lst_ShowUi.end(); it_ShowUi++)
+    {
+        T_LocalUiForShow & rowUi = *it_ShowUi;
+        rowUi.prequestBtn->setEnabled(false);
+    }
 }
 
 
@@ -314,6 +317,8 @@ void MainWindow::showResources(QString cltmsg)
     usrlist << "" << str_china("小屁孩") <<  str_china("龙龙") << str_china("奇奇");
 
 
+    lst_ShowUi.clear();
+
     //    lst_sources.size();
     for(it_src = lst_sources.begin(); it_src != lst_sources.end(); it_src++)
     {
@@ -329,9 +334,6 @@ void MainWindow::showResources(QString cltmsg)
                      tmp.usr,
                      tmp.notice);
     }
-    //    this->update();
-    //    repaint();
-
 
 }
 
@@ -367,7 +369,7 @@ void MainWindow::showTitle()
 
     //devname  devip           netip          time   usr       notice
     QLabel *title = new QLabel;
-    title->setText(str_china("名称       设备IP      网元IP    申请时间    用户    备注"));
+    title->setText(str_china("名称       设备IP    网元IP   申请时间   用户    备注"));
     // 设置字体：微软雅黑、点大小36
     QFont font;
     font.setFamily("Microsoft YaHei");
@@ -423,13 +425,11 @@ void MainWindow::showOneRowUI(QString devname,
     QComboBox *pTime = new QComboBox;
     SETFONT(pTime, WIDTHSIZE);
     pTime->addItems(timelist);
-    //    pTime->setCurrentIndex(timeindex);
     pTime->setCurrentText(CONVERT_CHIN(timeindex));
 
     QComboBox *pUsr = new QComboBox;
     SETFONT(pUsr, WIDTHSIZE);
     pUsr->addItems(usrlist);
-    //    pUsr->setCurrentIndex(usrindex);
     pUsr->setCurrentText(CONVERT_CHIN(usrindex));
 
     QLineEdit *pNotice = new QLineEdit(CONVERT_CHIN(notice));
@@ -439,6 +439,8 @@ void MainWindow::showOneRowUI(QString devname,
     KeyButton *prequestBtn = new KeyButton(QString(QString::fromLocal8Bit("申请") + devname));
     connect(prequestBtn, SIGNAL(keyClicked(QString)), this, SLOT(Proc_RequestSrcItem(QString)));
     SETFONT(prequestBtn, WIDTHSIZE);
+
+
 
     //水平排列
     QHBoxLayout *pHItemLay = new QHBoxLayout;
@@ -456,27 +458,10 @@ void MainWindow::showOneRowUI(QString devname,
     pHItemLay->addStretch();
     pHItemLay->addWidget(prequestBtn);
     pHItemLay->addStretch();
-    //    setHorizontalStretch();
-    //    pHItemLay->setAlignment(Qt::AlignLeft);
-    //    pHItemLay->layout();
 
-    //    pHItemLay->addWidget(pDevName);
-
-
-    //    QRect rect(0,100, 300, 400);
-    //    QDesktopWidget *desk=QApplication::desktop();
-    //    int wd=desk->width();
-    //    int ht=desk->height();
-    //    setMaximumSize(wd, ht);
-
-    //    ui->verticalLayout_resource->setGeometry(rect);
 
     ui->verticalLayout_resource->addLayout(pHItemLay);
     ui->verticalLayout_resource->setSpacing(10);
-    //    MainWindow->resize(601, 390);
-    //    resize(601, 390);
-    //    repaint();
-    //    showMinimized();
 
 
     showuilist.push_back(pDevName);
@@ -487,13 +472,73 @@ void MainWindow::showOneRowUI(QString devname,
     showuilist.push_back(pNotice);
     showuilist.push_back(prequestBtn);
 
+//保存到结构列表中
+    T_LocalUiForShow rowUi;
+    rowUi.pDevName = pDevName;
+    rowUi.pDevIP = pDevIP;
+    rowUi.pNetIP = pNetIP;
+    rowUi.pTime = pTime;
+    rowUi.pUsr = pUsr;
+    rowUi.pNotice = pNotice;
+    rowUi.prequestBtn = prequestBtn;
+
+    lst_ShowUi.push_back(rowUi);
+
+
 }
 
 void MainWindow::Proc_RequestSrcItem(QString text)
 {
     qDebug() << "btn pressed:" << str_china(text.toLocal8Bit().data());
+
+    for(it_ShowUi = lst_ShowUi.begin(); it_ShowUi != lst_ShowUi.end(); it_ShowUi++)
+    {
+        T_LocalUiForShow & rowUi = *it_ShowUi;
+        if(text == rowUi.prequestBtn->text())
+        {
+            Proc_RequestUpdate(rowUi);
+        }
+    }
 }
 
+
+
+void MainWindow::Proc_RequestUpdate(T_LocalUiForShow &rowUi)
+{
+#define ADDRESULT(VAL)\
+    result +=  AddYinHao(VAL) + ",";
+
+    QString result;
+    result.clear();
+
+    qDebug() << "request for update " << str_china(rowUi.prequestBtn->text().toLocal8Bit().data());
+    logsappendShow("request for update " + str_china(rowUi.prequestBtn->text().toLocal8Bit().data()));
+
+    T_ResourceUse tmp;
+    tmp.devname = rowUi.pDevName->text();
+    tmp.devip   = rowUi.pDevIP->text();
+    tmp.netip   = rowUi.pNetIP->text();
+    tmp.time    = rowUi.pTime->currentText();
+    tmp.usr     = rowUi.pUsr->currentText();
+    tmp.notice  = rowUi.pNotice->text();
+    tmp.right   = "";
+
+    ADDRESULT(tmp.devname);
+    ADDRESULT(tmp.devip);
+    ADDRESULT(tmp.netip);
+    ADDRESULT(tmp.timelst);
+    ADDRESULT(tmp.time);
+    ADDRESULT(tmp.usrlist);
+    ADDRESULT(tmp.usr);
+    ADDRESULT(tmp.notice);
+    ADDRESULT(tmp.right);
+
+
+    result = result.left(result.length() -1 );
+
+
+    pthreadsock->sendmsg(CMD_UPDATE_SRC + result);
+}
 
 
 
@@ -521,26 +566,6 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 {
     QMainWindow::resizeEvent(event);
     // Your code here
-    // Your code here
-    //    QDesktopWidget *desk=QApplication::desktop();
-    //    int wd=desk->width();
-    //    int ht=desk->height();
-    //    qDebug() << "ui->centralWidget size:" << ui->centralWidget->size() ;
-    //    ui->centralWidget->resize(wd, ht);
-    //    resize(wd, ht);
-    //    setGeometry(0,0,wd/2,ht/2);
-    //    ui->centralWidget->resize(ui->centralWidget->size());
-    //    update();
-    //    qDebug() << "wd():" << wd << "ht():"<< ht ;
-    //    qDebug() << "ui->centralWidget size:" << ui->centralWidget->size() ;
-
-    //     ui->centralWidget->resize(frameGeometry().size());
-    //     qDebug() << "frameGeometry().size():" << frameGeometry().size();
-    //    int width = ui->centralWidget->width(), height = ui->centralWidget->height();
-    //    ui->item->move(width * 0.25 - 80, (height - 320) / 2 - 8);
-    //    ui->item->move(width * 0.25 - 80, (height - 320) / 2 - 8);
-
-    //    setCentralWidget(this);
 }
 
 
@@ -559,3 +584,19 @@ void MainWindow::setPushBtnEnable(QString st)
 {
     ui->pushButton->setEnabled(true);
 }
+
+QString MainWindow::AddYinHao(QString str)
+{
+    return ("\"" + str.replace("\"", "\"\"") + "\"");
+}
+
+
+
+//QLabel *pDevName = new QLabel(CONVERT_CHIN(devname));
+//QLineEdit *pDevIP = new QLineEdit(CONVERT_CHIN(devip));
+//QLineEdit *pNetIP = new QLineEdit(CONVERT_CHIN(netip));
+//QComboBox *pTime = new QComboBox;
+//QComboBox *pUsr = new QComboBox;
+//QLineEdit *pNotice = new QLineEdit(CONVERT_CHIN(notice));
+//KeyButton *prequestBtn = new KeyButton(QString(QString::fromLocal8Bit("申请") + devname));
+

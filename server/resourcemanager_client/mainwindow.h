@@ -7,6 +7,23 @@
 #include <QAbstractSocket>
 #include "sockthread.h"
 #include "kouling.h"
+#include <QtWidgets>
+#include "keybutton.h"
+
+
+
+//单行保存的界面信息
+typedef struct T_LocalUiForShow{
+    QLabel *pDevName      ;    /*  */
+    QLineEdit *pDevIP     ;    /*  */
+    QLineEdit *pNetIP     ;    /*  */
+    QComboBox *pTime      ;    /*  */
+    QComboBox *pUsr       ;    /*  */
+    QLineEdit *pNotice    ;    /*  */
+    KeyButton *prequestBtn;    /*  */
+}T_LocalUiForShow, *P_LocalUiForShow;
+
+
 
 namespace Ui {
 class MainWindow;
@@ -41,12 +58,15 @@ public slots:
     void deleteBeforeShow();
     void showOneRowUI(QString devname, QString devip, QString netip, QStringList time, QString timeindex, QStringList usr, QString usrindex, QString notice);
     void Proc_RequestSrcItem(QString text);
+    void Proc_RequestUpdate(T_LocalUiForShow &rowUi);
 
     void test_showoneresource(QString cltmsg);
     void showResources(QString cltmsg);
     void T_ResourceUse_Print(T_ResourceUse *p);
 
     void setPushBtnEnable(QString st);
+
+    QString AddYinHao(QString str);
 private slots:
     void on_pushButton_clicked();
 
@@ -68,6 +88,8 @@ private:
     QList<T_ResourceUse> lst_sources;
     QList<T_ResourceUse>::iterator it_src;
 
+    QList<T_LocalUiForShow> lst_ShowUi;
+    QList<T_LocalUiForShow>::iterator it_ShowUi;
 };
 
 

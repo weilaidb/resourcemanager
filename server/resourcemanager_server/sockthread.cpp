@@ -228,3 +228,9 @@ void sockthread::setSocketConnect(QTcpSocket *cltConnet)
 
 }
 
+void sockthread::closeSocketConnect()
+{
+    clientConnection->close();
+    clientConnection->deleteLater();
+}
+

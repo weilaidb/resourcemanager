@@ -93,7 +93,7 @@ release/app_res.o: app.rc
 	windres -i app.rc -o release\app_res.o --include-dir=. $(DEFINES)
 
 qmake: FORCE
-	@$(QMAKE) -spec win32-g++ CONFIG+=debug -o Makefile.Release resourcemanager_server.pro
+	@$(QMAKE) -spec win32-g++ -o Makefile.Release resourcemanager_server.pro
 
 qmake_all: FORCE
 

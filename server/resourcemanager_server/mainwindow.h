@@ -31,7 +31,9 @@ public:
     void SetIPADDR_UI();
 
     int readResTxt(const char *filepath);
+    int writeResTxt(const char *filepath);
     int reLoadResource();
+    int saveResource();
 
     QString readUsrInfoTxt(const char *filepath);
     int reLoadUsrList();
@@ -49,10 +51,16 @@ public slots:
     void readfromremote(QString cltmsg, void *pthread);
     void replyclientwhenflush();
     void dealclienterror(QString cltmsg, void * pthread);
+    void closeallclientsocket();
 
     void ReplyResourceInfo(void *socket);
+    void ReplyUpdateInfo(void *pthread, QString row);
+
     QString ComBineResource(void);
+    void UpdateResources(QString row);
+
     QString AddYinHao(QString str);
+    void enablebindpushtbn(QString str);
 
 private slots:
     void on_pushButton_clicked();
