@@ -9,7 +9,7 @@ QT       += network
 
 TARGET = resourcemanager_client
 TEMPLATE = app
-
+RC_FILE = app.rc
 
 SOURCES += main.cpp\
         mainwindow.cpp \

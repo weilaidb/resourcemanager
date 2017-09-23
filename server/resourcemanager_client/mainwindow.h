@@ -33,8 +33,8 @@ public:
 
 public slots:
     void hellosocket();
-    void readfromremote(QString cltmsg);
-    void procErrMsg(QString errmsg);
+    void readfromremote(QString cltmsg, void *);
+    void procErrMsg(QString errmsg, void *);
 
 
     void showTitle();

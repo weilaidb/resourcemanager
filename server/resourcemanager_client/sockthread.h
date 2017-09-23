@@ -26,11 +26,11 @@ public:
     explicit sockthread(QObject *parent = 0);
     void setSocketConnect(QTcpSocket *cltConnet);
     void sendmsg(QString msgs);
-    
+
 signals:
-    void emitMsgDoneSignal(QString);
-    void emitErrInfo(QString);
-    
+    void emitMsgDoneSignal(QString, void *);
+    void emitErrInfo(QString, void *);
+
 public slots:
     void displayErr(QAbstractSocket::SocketError socketError);
     void updateReadMsgProgress();

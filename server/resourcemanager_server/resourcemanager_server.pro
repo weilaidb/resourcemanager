@@ -10,6 +10,7 @@ QT       += network
 
 TARGET = resourcemanager_server
 TEMPLATE = app
+RC_FILE = app.rc
 
 
 SOURCES += main.cpp\

@@ -73,7 +73,8 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 {
 //    if(socketError == QTcpSocket::RemoteHostClosedError)
 //        return;
-    emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()));
+    emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()),
+                     (void *)this);
 //    QMessageBox::information(NULL,str_china("网络"),
 //                             str_china("产生如下错误： %1")
 //                             .arg(clientConnection->errorString()));
@@ -134,7 +135,7 @@ void sockthread::updateReadMsgProgress()
         QString  bigmsg = inBlock.mid(4); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
         //入库
 //        readfromremote(bigmsg);
-        emit emitMsgDoneSignal(bigmsg);
+        emit emitMsgDoneSignal(bigmsg, (void *)this);
         qDebug() << "read msg size:" << bigmsg.size();
 
         qDebug() << "read msg:" << bigmsg.toLocal8Bit();

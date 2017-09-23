@@ -197,10 +197,10 @@ void MainWindow::hellosocket()
     {
         pthreadsock = new sockthread(this);
         pthreadsock->setSocketConnect(socket);
-        QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString)),
-                         this,SLOT(readfromremote(QString)));
-        QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString)),
-                         this,SLOT(procErrMsg(QString)));
+        QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString,void*)),
+                         this,SLOT(readfromremote(QString,void*)));
+        QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString,void*)),
+                         this,SLOT(procErrMsg(QString,void*)));
         pthreadsock->start();
 
         //        ui->verticalLayout_resource->removeItem();
@@ -212,14 +212,14 @@ void MainWindow::hellosocket()
 
 }
 
-void MainWindow::procErrMsg(QString errmsg)
+void MainWindow::procErrMsg(QString errmsg,void*)
 {
     logsappendShow(errmsg);
     ui->pushButton->setEnabled(true);
 }
 
 
-void MainWindow::readfromremote(QString cltmsg)
+void MainWindow::readfromremote(QString cltmsg, void*)
 {
     logsappendShow(QString("read clt msg:%1").arg(cltmsg));
     if(cltmsg.contains(CMD_REPLY_SRC))

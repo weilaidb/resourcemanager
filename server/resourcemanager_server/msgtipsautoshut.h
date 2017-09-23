@@ -1,10 +1,9 @@
 #ifndef MSGTIPSAUTOSHUT_H
 #define MSGTIPSAUTOSHUT_H
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QApplication>
+#include <QWidget>
 #include <QtGui>
+#include <QtWidgets>
 
 class MsgTipsAutoShut : public QWidget
 {

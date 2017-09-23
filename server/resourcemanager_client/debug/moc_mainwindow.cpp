@@ -84,22 +84,22 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: name, argc, parameters, tag, flags
        1,    0,   74,    2, 0x0a /* Public */,
-       3,    1,   75,    2, 0x0a /* Public */,
-       5,    1,   78,    2, 0x0a /* Public */,
-       7,    0,   81,    2, 0x0a /* Public */,
-       8,    0,   82,    2, 0x0a /* Public */,
-       9,    8,   83,    2, 0x0a /* Public */,
-      18,    1,  100,    2, 0x0a /* Public */,
-      20,    1,  103,    2, 0x0a /* Public */,
-      21,    1,  106,    2, 0x0a /* Public */,
-      22,    1,  109,    2, 0x0a /* Public */,
-      25,    1,  112,    2, 0x0a /* Public */,
-      27,    0,  115,    2, 0x08 /* Private */,
+       3,    2,   75,    2, 0x0a /* Public */,
+       5,    2,   80,    2, 0x0a /* Public */,
+       7,    0,   85,    2, 0x0a /* Public */,
+       8,    0,   86,    2, 0x0a /* Public */,
+       9,    8,   87,    2, 0x0a /* Public */,
+      18,    1,  104,    2, 0x0a /* Public */,
+      20,    1,  107,    2, 0x0a /* Public */,
+      21,    1,  110,    2, 0x0a /* Public */,
+      22,    1,  113,    2, 0x0a /* Public */,
+      25,    1,  116,    2, 0x0a /* Public */,
+      27,    0,  119,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    4,
-    QMetaType::Void, QMetaType::QString,    6,
+    QMetaType::Void, QMetaType::QString, QMetaType::VoidStar,    4,    2,
+    QMetaType::Void, QMetaType::QString, QMetaType::VoidStar,    6,    2,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QStringList, QMetaType::QString, QMetaType::QStringList, QMetaType::QString, QMetaType::QString,   10,   11,   12,   13,   14,   15,   16,   17,
@@ -119,8 +119,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
         case 0: _t->hellosocket(); break;
-        case 1: _t->readfromremote((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 2: _t->procErrMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 1: _t->readfromremote((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
+        case 2: _t->procErrMsg((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
         case 3: _t->showTitle(); break;
         case 4: _t->deleteBeforeShow(); break;
         case 5: _t->showOneRowUI((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< QStringList(*)>(_a[4])),(*reinterpret_cast< QString(*)>(_a[5])),(*reinterpret_cast< QStringList(*)>(_a[6])),(*reinterpret_cast< QString(*)>(_a[7])),(*reinterpret_cast< QString(*)>(_a[8]))); break;
