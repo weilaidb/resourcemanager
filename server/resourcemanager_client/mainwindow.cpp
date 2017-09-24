@@ -228,6 +228,7 @@ void MainWindow::readfromremote(QString cltmsg, void*)
     if(cltmsg.contains(CMD_REPLY_SRC))
     {//处理收到的资源信息并显示到界面
         qDebug() << "Show @ UI";
+
         deleteBeforeShow();
         showTitle();
 #ifdef TESTSHOW
@@ -238,6 +239,7 @@ void MainWindow::readfromremote(QString cltmsg, void*)
         //        setLayout(ui->verticalLayout_resource);
 
 
+        ShowTipsInfoWithShowTime(str_china("更新完成"), 1500);
     }
 }
 
