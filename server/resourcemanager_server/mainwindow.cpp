@@ -336,6 +336,7 @@ int MainWindow::readResTxt(const char *filepath)
     file.close();
     return 0;
 }
+
 int MainWindow::writeResTxt(const char *filepath)
 {
     QFile file(filepath);
@@ -390,6 +391,45 @@ int MainWindow::writeResTxt(const char *filepath)
 }
 
 
+int MainWindow::writeDefaultResTxt(const char *filepath)
+{
+    QFile file(filepath);
+    file.open(QIODevice::WriteOnly);
+
+    QTextStream in(&file);
+    in.setCodec("UTF-8"); //请注意这行
+    QString TITLE= "devname  devip           netip          time   usr       notice right";
+    in << TITLE + "\n";
+
+#define ADDSPACE(VAL)\
+    result +=  (VAL).replace("\"" ,"") + "   ";
+
+    QString result;
+    result.clear();
+//    lst_sources.size();
+    for(it_src = lst_sources.begin(); it_src != lst_sources.end(); it_src++)
+    {
+        T_ResourceUse &tmp = *it_src;
+        result.clear();
+
+        ADDSPACE(tmp.devname);
+        ADDSPACE(tmp.devip);
+        ADDSPACE(tmp.netip);
+//        ADDSPACE(tmp.timelst);
+        ADDSPACE(tmp.time);
+//        ADDSPACE(tmp.usrlist);
+//        ADDSPACE(tmp.usr);
+        ADDSPACE(QString::fromLocal8Bit("无"));
+        ADDSPACE(tmp.notice);
+        ADDSPACE(tmp.right);
+        in << result + "\n";
+
+    }
+
+    file.close();
+
+    return 0;
+}
 
 
 QString MainWindow::readUsrInfoTxt(const char *filepath)
@@ -446,7 +486,7 @@ int MainWindow::saveResource()
 
     writeResTxt(filename.toLocal8Bit().data());
 
-//    writeResTxt(RESOURCEBACKPATH);
+    writeDefaultResTxt(RESOURCEPATH);
     return 0;
 }
 

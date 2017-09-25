@@ -372,10 +372,10 @@ void MainWindow::showTitle()
     //devname  devip           netip          time   usr       notice
     QLabel *title = new QLabel;
     title->setText(str_china("名称       设备IP    网元IP   申请时间   用户    备注"));
-    // 设置字体：微软雅黑、点大小36
+    // 设置字体：微软雅黑、点大小20
     QFont font;
     font.setFamily("Microsoft YaHei");
-    font.setPointSize(30);
+    font.setPointSize(20);
     font.setItalic(false);
 
     title->setFont(font);
@@ -402,10 +402,10 @@ void MainWindow::showOneRowUI(QString devname,
                               QString usrindex,
                               QString notice)
 {
-    // 设置字体：微软雅黑、点大小16
+    // 设置字体：微软雅黑、点大小14
     QFont font;
     font.setFamily("Microsoft YaHei");
-    font.setPointSize(16);
+    font.setPointSize(14);
     font.setItalic(false);
 
 #define SETFONT(WIDGET, WIDTHSIZE)\

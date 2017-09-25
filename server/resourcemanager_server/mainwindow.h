@@ -32,6 +32,7 @@ public:
 
     int readResTxt(const char *filepath);
     int writeResTxt(const char *filepath);
+    int writeDefaultResTxt(const char *filepath);
     int reLoadResource();
     int saveResource();
 
