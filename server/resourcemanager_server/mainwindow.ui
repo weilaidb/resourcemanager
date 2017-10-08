@@ -32,9 +32,33 @@
      <widget class="QPushButton" name="pushButton_flushipaddr">
       <property name="font">
        <font>
-        <family>楷体</family>
-        <pointsize>14</pointsize>
+        <pointsize>-1</pointsize>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    border: 1px solid #000000;
+    border-radius: 5px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                   stop: 0 #dedede, stop: 0.5 #434343,
+                                   stop: 0.51 #000000, stop: 1 #656a6d);
+    color: #FFFFFF;
+    font: bold 20px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                   stop: 0 #cfcccc, stop: 0.5 #333232,
+                                   stop: 0.51 #000000, stop: 1 #585c5f);
+    color: #00CC00;
+}
+ 
+QPushButton:flat {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string>刷新IP</string>
@@ -58,12 +82,32 @@
      <widget class="QPushButton" name="pushButton">
       <property name="font">
        <font>
-        <family>楷体</family>
-        <pointsize>14</pointsize>
+        <pointsize>-1</pointsize>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    border: 1px solid #000000;
+    border-radius: 5px;
+    font: bold 20px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                   stop: 0 #cfcccc, stop: 0.5 #333232,
+                                   stop: 0.51 #000000, stop: 1 #585c5f);
+    color: #00CC00;
+}
+ 
+QPushButton:flat {
+    border: none;
+}</string>
+      </property>
       <property name="text">
-       <string>绑定</string>
+       <string>绑  定</string>
       </property>
      </widget>
     </item>
@@ -78,7 +122,7 @@
      <x>0</x>
      <y>0</y>
      <width>487</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

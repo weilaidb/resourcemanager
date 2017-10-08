@@ -127,6 +127,43 @@ public:
         pushButton->setSizePolicy(sizePolicy1);
         pushButton->setMaximumSize(QSize(260, 27));
         pushButton->setFont(font);
+        pushButton->setStyleSheet(QLatin1String("QPushButton {\n"
+"    /* Let's make the size of the button 1,5 times of font size. */\n"
+"    min-height: 1.5em;\n"
+"    /* Font size just 1.*/\n"
+"    font: 1em;\n"
+"    /* Margins so that we get a little space on the left and right. */\n"
+"    margin: 0 1px 0 1px;\n"
+"    /* The font color */ \n"
+"    color: white;\n"
+"    /* Here's the background gradient with start point, end point, \n"
+"       stop \"percentage\" and color, stop percentage and color. */\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #2198c0, stop: 1 #0d5ca6);\n"
+"    /* We'll round the borders. */\n"
+"    border-style: outset;\n"
+"    /* Round radius will be 3px */\n"
+"    border-radius: 3px;\n"
+"    /* Border is only one pixel */\n"
+"    border-width: 1px;\n"
+"    /* Border color is now set */\n"
+"    border-color: #0c457e;\n"
+"}\n"
+" \n"
+"/* This is style when button is pressed */\n"
+"QPushButton:pressed {\n"
+"    /* We'll just invert the gradient by changing the c"
+                        "olors around. */\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                      stop: 0 #0d5ca6, stop: 1 #2198c0);\n"
+"}\n"
+" \n"
+"QPushButton:flat {\n"
+"    border: none;\n"
+"}\n"
+"QPushButton:disabled {\n"
+"	color: grey\n"
+"}"));
 
         horizontalLayout->addWidget(pushButton);
 

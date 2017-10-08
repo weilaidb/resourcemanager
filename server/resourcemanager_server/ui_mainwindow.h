@@ -63,23 +63,63 @@ public:
 
         pushButton_flushipaddr = new QPushButton(centralWidget);
         pushButton_flushipaddr->setObjectName(QStringLiteral("pushButton_flushipaddr"));
-        pushButton_flushipaddr->setFont(font);
+        QFont font1;
+        font1.setBold(true);
+        font1.setItalic(false);
+        font1.setWeight(75);
+        pushButton_flushipaddr->setFont(font1);
+        pushButton_flushipaddr->setStyleSheet(QLatin1String("QPushButton {\n"
+"    border: 1px solid #000000;\n"
+"    border-radius: 5px;\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                   stop: 0 #dedede, stop: 0.5 #434343,\n"
+"                                   stop: 0.51 #000000, stop: 1 #656a6d);\n"
+"    color: #FFFFFF;\n"
+"    font: bold 20px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                   stop: 0 #cfcccc, stop: 0.5 #333232,\n"
+"                                   stop: 0.51 #000000, stop: 1 #585c5f);\n"
+"    color: #00CC00;\n"
+"}\n"
+" \n"
+"QPushButton:flat {\n"
+"    border: none;\n"
+"}"));
 
         gridLayout->addWidget(pushButton_flushipaddr, 0, 1, 1, 1);
 
         comboBox = new QComboBox(centralWidget);
         comboBox->setObjectName(QStringLiteral("comboBox"));
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font1.setPointSize(14);
-        comboBox->setFont(font1);
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font2.setPointSize(14);
+        comboBox->setFont(font2);
         comboBox->setEditable(true);
 
         gridLayout->addWidget(comboBox, 1, 0, 1, 1);
 
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setFont(font);
+        pushButton->setFont(font1);
+        pushButton->setStyleSheet(QLatin1String("QPushButton {\n"
+"    border: 1px solid #000000;\n"
+"    border-radius: 5px;\n"
+"    font: bold 20px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                   stop: 0 #cfcccc, stop: 0.5 #333232,\n"
+"                                   stop: 0.51 #000000, stop: 1 #585c5f);\n"
+"    color: #00CC00;\n"
+"}\n"
+" \n"
+"QPushButton:flat {\n"
+"    border: none;\n"
+"}"));
 
         gridLayout->addWidget(pushButton, 1, 1, 1, 1);
 
@@ -91,7 +131,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 487, 22));
+        menuBar->setGeometry(QRect(0, 0, 487, 23));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -110,7 +150,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\347\216\257\345\242\203\347\256\241\347\220\206\350\200\205", 0));
         label->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\234\260\345\235\200,\350\257\267\351\200\211\346\213\251", 0));
         pushButton_flushipaddr->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260IP", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "\347\273\221\345\256\232", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "\347\273\221  \345\256\232", 0));
     } // retranslateUi
 
 };

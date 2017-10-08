@@ -371,7 +371,7 @@ void MainWindow::showTitle()
 
     //devname  devip           netip          time   usr       notice
     QLabel *title = new QLabel;
-    title->setText(str_china("名称       设备IP    网元IP   申请时间   用户    备注"));
+    title->setText(str_china("名称              设备IP         网元IP           申请时间         用户          备注                               请申请"));
     // 设置字体：微软雅黑、点大小20
     QFont font;
     font.setFamily("Microsoft YaHei");
@@ -379,6 +379,13 @@ void MainWindow::showTitle()
     font.setItalic(false);
 
     title->setFont(font);
+    title->setStyleSheet("QLabel{"
+                         "background:transparent;"
+                         "border:2px solid green;"
+                         "border-radius:4px;"
+                         "padding:2px;"
+                         "color:blue;"
+                         "}   ");
     ui->verticalLayout_resource->addWidget(title);
     showuilist.push_back(title);
 }
@@ -419,6 +426,15 @@ void MainWindow::showOneRowUI(QString devname,
 
     QLabel *pDevName = new QLabel(CONVERT_CHIN(devname));
     SETFONT(pDevName, WIDTHSIZE);
+    pDevName->setStyleSheet("QLabel{"
+                         "background:transparent;"
+                         "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                                                          "stop: 0 #007500, stop: 1 #a6ffa6);"
+                         "border-radius:4px;"
+                         "padding:2px;"
+                         "color:white;"
+                         "}   ");
+
     QLineEdit *pDevIP = new QLineEdit(CONVERT_CHIN(devip));
     SETFONT(pDevIP, WIDTHSIZE);
     QLineEdit *pNetIP = new QLineEdit(CONVERT_CHIN(netip));
@@ -441,7 +457,43 @@ void MainWindow::showOneRowUI(QString devname,
     KeyButton *prequestBtn = new KeyButton(QString(QString::fromLocal8Bit("申请") + devname));
     connect(prequestBtn, SIGNAL(keyClicked(QString)), this, SLOT(Proc_RequestSrcItem(QString)));
     SETFONT(prequestBtn, WIDTHSIZE);
-
+    prequestBtn->setStyleSheet("QPushButton {"
+                               "    /* Let's make the size of the button 1,5 times of font size. */"
+                               "    min-height: 1.5em;"
+                               "    /* Font size just 1.*/"
+                               "    font: 1em;"
+                               "    /* Margins so that we get a little space on the left and right. */"
+                               "    margin: 0 1px 0 1px;"
+                               "    /* The font color */ "
+                               "    color: white;"
+                               "    /* Here's the background gradient with start point, end point, "
+                               "       stop \"percentage\" and color, stop percentage and color. */"
+                               "    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                               "                                      stop: 0 #2198c0, stop: 1 #0d5ca6);"
+                               "    /* We'll round the borders. */"
+                               "    border-style: outset;"
+                               "    /* Round radius will be 3px */"
+                               "    border-radius: 3px;"
+                               "    /* Border is only one pixel */"
+                               "    border-width: 1px;"
+                               "    /* Border color is now set */"
+                               "    border-color: #0c457e;"
+                               "}"
+                               " "
+                               "/* This is style when button is pressed */"
+                               "QPushButton:pressed {"
+                               "    /* We'll just invert the gradient by changing the colors around. */"
+                               "    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                               "                                      stop: 0 #0d5ca6, stop: 1 #2198c0);"
+                               "}"
+                               " "
+                               "QPushButton:flat {"
+                               "    border: none;"
+                               "}"
+                               "QPushButton:disabled {"
+                               "	color: grey"
+                               "}"
+                               );
 
 
     //水平排列

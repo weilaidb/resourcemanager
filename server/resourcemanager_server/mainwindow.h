@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void UIBeauty();
     int InitServer(QString ipaddr, quint16 listenport);
     void WriteCurrentSettings();
     void ReadHistorySettings();

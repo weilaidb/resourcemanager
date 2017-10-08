@@ -44,11 +44,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(dateTimer,SIGNAL(timeout()), this,
                      SLOT(Proc_DateChange()));
     dateTimer->start(1000 * 60 * 2);//2分钟检测一次时期是否变化
+    UIBeauty();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::UIBeauty()
+{
+
+
 }
 
 int MainWindow::InitServer( QString ipaddr, quint16 listenport)
