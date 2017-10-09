@@ -28,6 +28,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(ui->comboBox, SIGNAL(currentTextChanged(QString)), this,
                      SLOT(setPushBtnEnable(QString)));
+
+    QFile styleSheet(":/qss/myStyle.qss");
+    if (!styleSheet.open(QIODevice::ReadOnly))
+    {
+        qWarning("Can't open the style sheet file.");
+
+    }
+    else
+    {
+//        qApp->setStyleSheet(styleSheet.readAll());
+        this->setStyleSheet(styleSheet.readAll());
+    }
+
 }
 
 MainWindow::~MainWindow()
@@ -512,6 +525,7 @@ void MainWindow::showOneRowUI(QString devname,
     pHItemLay->addStretch();
     pHItemLay->addWidget(prequestBtn);
     pHItemLay->addStretch();
+
 
 
     ui->verticalLayout_resource->addLayout(pHItemLay);

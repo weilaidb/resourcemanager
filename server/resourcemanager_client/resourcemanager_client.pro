@@ -26,3 +26,8 @@ HEADERS  += mainwindow.h \
     keybutton.h
 
 FORMS    += mainwindow.ui
+
+OTHER_FILES +=
+
+RESOURCES += \
+    qss.qrc

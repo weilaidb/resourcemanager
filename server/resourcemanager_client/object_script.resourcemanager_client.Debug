@@ -5,6 +5,7 @@ INPUT(
 ./debug\msgtips.o
 ./debug\sockthread.o
 ./debug\keybutton.o
+./debug\qrc_qss.o
 ./debug\moc_mainwindow.o
 ./debug\moc_msgtipsautoshut.o
 ./debug\moc_sockthread.o

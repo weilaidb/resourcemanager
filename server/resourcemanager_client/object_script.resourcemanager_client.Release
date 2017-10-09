@@ -5,6 +5,7 @@ INPUT(
 ./release\msgtips.o
 ./release\sockthread.o
 ./release\keybutton.o
+./release\qrc_qss.o
 ./release\moc_mainwindow.o
 ./release\moc_msgtipsautoshut.o
 ./release\moc_sockthread.o

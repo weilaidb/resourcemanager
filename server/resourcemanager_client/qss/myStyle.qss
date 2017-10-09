@@ -1,0 +1,72 @@
+QPushButton::menu-indicator{image:None;}
+QPushButton:focus{padding: -5;}
+QLabel#label
+{
+    padding-top:5px;
+    border: 0px;
+    background:transparent;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #007500, stop: 1 #a6ffa6);
+    border-radius:4px;
+    padding:2px;
+    color:white;
+}
+QComboBox#comboBox
+{
+    padding-top:5px;
+    border: 0px;
+    background:transparent;
+    background-color: white;
+    border-radius:4px;
+    padding:2px;
+    color:black;
+}
+
+QMenuBar
+{
+    background-image: url(./images/background_main_top.png);
+}
+QTreeWidget#treeWidget
+{
+    background-image: url(./images/background_main_left.png);
+    padding-top:5px;
+}
+QFrame#frame
+{
+    background-image: url(./images/background.png);
+    border: 0px;
+}
+QFrame#frame_3
+{
+    background-image: url(./images/background.png);
+    border: 0px;
+}
+
+QPushButton#pushButton_1
+{
+    background-image: url(./images/btn_1.png);
+    background-color: transparent;
+    border: 0px;
+}
+QPushButton#pushButton_1:hover{
+    background-image: url(./images/btn_1_hover.png);
+    border: 0px;
+}
+QPushButton#pushButton_1:checked{
+    background-image: url(:/res/image/11.png);
+    border: 0px;
+}
+
+QPushButton#pushButton_10{
+    background-image: url(./images/btn_10.png);
+    background-color: transparent;
+    border: 0px;
+}
+QPushButton#pushButton_10:hover{
+    background-image: url(./images/btn_10_hover.png);
+    border: 0px;
+}
+QPushButton#pushButton_10:checked{
+    background-image: url(:/res/image/22.png);
+    border: 0px;
+}
