@@ -26,3 +26,6 @@ HEADERS  += mainwindow.h \
     sockthread.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    imgs.qrc

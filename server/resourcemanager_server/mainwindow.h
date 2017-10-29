@@ -11,6 +11,8 @@
 #include <QRegExp>
 #include "sockthread.h"
 #include <QUdpSocket>
+#include <QSystemTrayIcon>
+#include <QCloseEvent>
 
 
 namespace Ui {
@@ -28,7 +30,12 @@ public:
     int InitServer(QString ipaddr, quint16 listenport);
     void WriteCurrentSettings();
     void ReadHistorySettings();
-    void closeEvent(QCloseEvent *event);
+
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void createActions();
+    void createTrayIcon();
+
+
     QList<QString> Getifconfig(void);
     int CheckIPAddr(QString ipaddr);
     void SetIPADDR_UI();
@@ -48,6 +55,27 @@ public:
     int AppendResInfo(QString line);
     QByteArray CMPINDEX(quint16 INDEX, QStringList &strlst);
     void T_ResourceUse_Print(T_ResourceUse *p);
+
+    void changeEvent(QEvent *e);
+
+
+private:
+    void closeEvent(QCloseEvent *event);
+
+#if 1
+    QSystemTrayIcon *trayIcon;
+    char *msg;
+
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *restoreAction;
+    QAction *savetofileAction;
+    QAction *quitAction;
+    QAction *startAction;
+    QAction *stopAction;
+    QMenu *trayIconMenu;
+#endif
+
 
 public slots:
     void procClientMessage();
