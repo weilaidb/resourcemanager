@@ -22,7 +22,7 @@ using namespace std;
 #define LOCAL_PORT 11121
 #define DEST_PORT 12811
 
-#define TRY_TIMES 1
+#define TRY_TIMES 10
 
 
 
@@ -708,11 +708,11 @@ void MainWindow::initBroadcast()
 void MainWindow::BroadcastGetIpCommand()
 {
     //QByteArray datagram = "Hello World!";
-    qDebug() << "BroadcastGetIpCommand !!!" ;
     QByteArray datagram = GET_HOST_COMMAND;
     int times = TRY_TIMES;
     while(times--)
     {
+        qDebug() << "BroadcastGetIpCommand !!!" ;
         //sender->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,1066);
         receiver->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,DEST_PORT);
     }
