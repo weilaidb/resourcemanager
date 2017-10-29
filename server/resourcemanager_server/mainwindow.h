@@ -10,6 +10,8 @@
 #include "kouling.h"
 #include <QRegExp>
 #include "sockthread.h"
+#include <QUdpSocket>
+
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +32,8 @@ public:
     QList<QString> Getifconfig(void);
     int CheckIPAddr(QString ipaddr);
     void SetIPADDR_UI();
+    QString GetFilteredIpAddr();
+    void AutoBindAddress();
 
     int readResTxt(const char *filepath);
     int writeResTxt(const char *filepath);
@@ -67,6 +71,11 @@ public slots:
     void Proc_DateChange();
     void whendatechange_flushipaddr();
 
+    //udp process
+    void initBroadcastListener();
+    void processPengingDatagram();
+    QString getIp();
+
 private slots:
     void on_pushButton_clicked();
 
@@ -99,6 +108,11 @@ private:
 
 private:
     QTimer *dateTimer;
+
+private:
+    //接收客户侧广播数据
+    QUdpSocket * receiver;
+    QUdpSocket * sender;
 };
 
 

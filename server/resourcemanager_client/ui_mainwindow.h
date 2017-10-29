@@ -203,7 +203,7 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\347\216\257\345\242\203\345\256\242\346\210\267\347\253\257", 0));
         label->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\234\260\345\235\200", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "\350\277\236\346\216\245\346\234\215\345\212\241\345\231\250\350\216\267\345\217\226\350\265\204\346\272\220", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\350\277\236\346\216\245\346\234\215\345\212\241\345\231\250\350\216\267\345\217\226\350\265\204\346\272\220", 0));
     } // retranslateUi
 
 };

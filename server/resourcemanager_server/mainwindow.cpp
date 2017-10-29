@@ -9,6 +9,16 @@
 #define USRLIST "usrlist.txt"
 
 
+//UDP process
+#include<QtNetwork>
+//#define GET_HOST_COMMAND "GetCYHost"
+#define GET_HOST_COMMAND "GetIPAddr"
+//#define LOCAL_PORT 11121
+#define Server_PORT 12811
+
+#define TRY_TIMES 1
+
+
 /**
 服务器侧环境信息的内容 RESOURCEPATH
 
@@ -45,6 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
                      SLOT(Proc_DateChange()));
     dateTimer->start(1000 * 60 * 2);//2分钟检测一次时期是否变化
     UIBeauty();
+
+    AutoBindAddress();
+
+    initBroadcastListener();
 }
 
 MainWindow::~MainWindow()
@@ -153,6 +167,7 @@ void MainWindow::ReadHistorySettings()
 
     ui->comboBox->setEditText(m_settings.value("curipaddr").toString());
     ui->textBrowser->setText(m_settings.value("logs").toString());
+    ui->lineEdit_addrFilter->setText(m_settings.value("addrFilter").toString());
     logs = m_settings.value("logs").toString();
 
     qDebug() <<  "reading from history settings, of comboBox_keytips :" << m_settings.value("comboBox_keytips").toInt();
@@ -172,6 +187,7 @@ void MainWindow::WriteCurrentSettings()
     QSettings m_settings("resourcemanager.com.cn", "resourcemanager");
     m_settings.setValue("curipaddr", ui->comboBox->currentText());
     m_settings.setValue("logs", logs);
+    m_settings.setValue("addrFilter", ui->lineEdit_addrFilter->text());
 
     //    qDebug() <<  "writing from history settings, of comboBox_keytips :" << ui->comboBox_keytips->currentIndex();
 
@@ -279,6 +295,28 @@ void MainWindow::SetIPADDR_UI()
         ui->comboBox->addItem(ipaddr);
     }
 }
+
+QString MainWindow::GetFilteredIpAddr()
+{
+    QList<QString> machineiplist = Getifconfig();
+    foreach (QString ipaddr, machineiplist) {
+        if(ipaddr.contains(ui->lineEdit_addrFilter->text()))
+            return ipaddr;
+    }
+    return "";
+}
+
+void MainWindow::AutoBindAddress()
+{
+    QString ipaddr = GetFilteredIpAddr();
+    if(!ipaddr.isEmpty())
+    {
+        ui->comboBox->setCurrentText(ipaddr);
+        on_pushButton_clicked();
+    }
+}
+
+
 
 void MainWindow::on_pushButton_flushipaddr_clicked()
 {
@@ -816,3 +854,68 @@ void MainWindow::Proc_DateChange()
     }
     oldate = curdate;
 }
+
+
+void MainWindow::initBroadcastListener()
+{
+    receiver = new QUdpSocket(this);
+    /////绑定，第一个参数为端口号，第二儿表示允许其它地址链接该广播
+    receiver->bind(Server_PORT,QUdpSocket::ShareAddress);
+
+    //readyRead:每当有数据报来时发送这个信号
+    connect(receiver,SIGNAL(readyRead()),this,SLOT(processPengingDatagram()));
+
+}
+
+void MainWindow::processPengingDatagram()
+{
+    QHostAddress client_address;//声明一个QHostAddress对象用于保存发送端的信息
+    //char buf[100];//声明一个字符数组用于接收发送过来的字符串
+    //数据报不为空
+    while( receiver->hasPendingDatagrams() )
+    {
+        quint16 recPort = 0;
+        QByteArray datagram;
+        //datagram大小为等待处理数据报的大小才能就收数据;
+        datagram.resize( receiver->pendingDatagramSize() );
+        //接收数据报
+        receiver->readDatagram(datagram.data(),datagram.size(), &client_address, &recPort);
+        //label->setText(datagram);
+        QString strData= datagram;
+        int ret = strData.compare(GET_HOST_COMMAND);
+        if (0 == ret)
+        {
+//            addBroadcastResItem(datagram, client_address.toString());
+            logsappendShow(datagram + "\t" + client_address.toString());
+
+            QByteArray datagback = "server ip is:"+getIp().toLatin1();
+            //QByteArray datagback = "my ip is:192.168.1.123";//+getIp().toLatin1();
+            receiver->writeDatagram(datagback,datagback.size(),client_address,recPort);
+        }
+    }
+}
+
+//得到主机的ip地址
+QString MainWindow::getIp()
+{
+    if(!ui->comboBox->currentText().isEmpty())
+        return ui->comboBox->currentText();
+ //使用allAddresses命令获得所有的ip地址
+    QString ipsets;
+    ipsets.clear();
+    QList<QHostAddress> list=QNetworkInterface::allAddresses();
+    foreach (QHostAddress address,list)
+    {
+        if(address.protocol()==QAbstractSocket::IPv4Protocol)
+        {
+            ipsets +=address.toString() + " ; ";
+//            return address.toString();
+        }
+
+    }
+    return ipsets;
+//    return 0;
+}
+
+
+

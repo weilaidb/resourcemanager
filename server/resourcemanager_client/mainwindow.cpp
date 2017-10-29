@@ -15,6 +15,18 @@ using namespace std;
 #define BINDPORT (88888)
 
 
+//UDP Process
+#include<QtNetwork>
+//#define GET_HOST_COMMAND "GetCYHost"
+#define GET_HOST_COMMAND "GetIPAddr"
+#define LOCAL_PORT 11121
+#define DEST_PORT 12811
+
+#define TRY_TIMES 1
+
+
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -40,6 +52,13 @@ MainWindow::MainWindow(QWidget *parent) :
 //        qApp->setStyleSheet(styleSheet.readAll());
         this->setStyleSheet(styleSheet.readAll());
     }
+
+
+    // UDP Process
+    initBroadcast();
+    Sleep(2000);
+    on_pushButton_clicked();
+
 
 }
 
@@ -189,6 +208,8 @@ void MainWindow::newConnect(QString ipaddr)
     {
         logsappendShow(str_china("连接超时，请检查服务器地址是否正确"));
         ui->pushButton->setEnabled(true);
+        //出错后，广播查找sever
+        BroadcastGetIpCommand();
         return;
     }
 
@@ -667,4 +688,65 @@ QString MainWindow::AddYinHao(QString str)
 //QComboBox *pUsr = new QComboBox;
 //QLineEdit *pNotice = new QLineEdit(CONVERT_CHIN(notice));
 //KeyButton *prequestBtn = new KeyButton(QString(QString::fromLocal8Bit("申请") + devname));
+
+
+
+
+
+void MainWindow::initBroadcast()
+{
+    receiver = new QUdpSocket(this);
+    /////绑定，第一个参数为端口号，第二儿表示允许其它地址链接该广播
+    receiver->bind(LOCAL_PORT,QUdpSocket::ShareAddress);
+
+    //readyRead:每当有数据报来时发送这个信号
+    connect(receiver,SIGNAL(readyRead()),this,SLOT(processPengingDatagram()));
+
+    BroadcastGetIpCommand();
+}
+
+void MainWindow::BroadcastGetIpCommand()
+{
+    //QByteArray datagram = "Hello World!";
+    qDebug() << "BroadcastGetIpCommand !!!" ;
+    QByteArray datagram = GET_HOST_COMMAND;
+    int times = TRY_TIMES;
+    while(times--)
+    {
+        //sender->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,1066);
+        receiver->writeDatagram(datagram.data(),datagram.size(),QHostAddress::Broadcast,DEST_PORT);
+    }
+}
+
+void MainWindow::processPengingDatagram()
+{
+    //数据报不为空
+    while( receiver->hasPendingDatagrams() )
+    {
+        QByteArray datagram;
+        //datagram大小为等待处理数据报的大小才能就收数据;
+        datagram.resize( receiver->pendingDatagramSize() );
+        //接收数据报
+        receiver->readDatagram(datagram.data(),datagram.size());
+        //label->setText(datagram);
+        addIpItem(datagram);
+    }
+}
+
+void MainWindow::addIpItem(QByteArray data)
+{
+    logsappendShow(data);
+    QList<QByteArray> serverip = data.split(':');
+    qDebug() << "server ip :" << serverip.at(1);
+    if(serverip.size() > 1)
+    {
+        QString actualsvrip = serverip.at(1).simplified();
+        ui->comboBox->setCurrentText(serverip.at(1).simplified());
+
+        on_pushButton_clicked();
+
+    }
+//    QListWidgetItem* lst1 = new QListWidgetItem(data, mlistWidget);
+//    mlistWidget->insertItem(1, lst1);
+}
 

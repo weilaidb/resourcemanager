@@ -17,6 +17,7 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -32,10 +33,12 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
+    QLineEdit *lineEdit_addrFilter;
+    QLabel *label_2;
     QLabel *label;
     QPushButton *pushButton_flushipaddr;
-    QComboBox *comboBox;
     QPushButton *pushButton;
+    QComboBox *comboBox;
     QTextBrowser *textBrowser;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -52,22 +55,46 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        lineEdit_addrFilter = new QLineEdit(centralWidget);
+        lineEdit_addrFilter->setObjectName(QStringLiteral("lineEdit_addrFilter"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(lineEdit_addrFilter->sizePolicy().hasHeightForWidth());
+        lineEdit_addrFilter->setSizePolicy(sizePolicy);
+        QFont font;
+        font.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font.setPointSize(12);
+        font.setBold(true);
+        font.setWeight(75);
+        lineEdit_addrFilter->setFont(font);
+
+        gridLayout->addWidget(lineEdit_addrFilter, 2, 1, 1, 1);
+
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
+        font1.setPointSize(14);
+        label_2->setFont(font1);
+
+        gridLayout->addWidget(label_2, 2, 0, 1, 1);
+
         label = new QLabel(centralWidget);
         label->setObjectName(QStringLiteral("label"));
-        QFont font;
-        font.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
-        font.setPointSize(14);
-        label->setFont(font);
+        label->setFont(font1);
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
         pushButton_flushipaddr = new QPushButton(centralWidget);
         pushButton_flushipaddr->setObjectName(QStringLiteral("pushButton_flushipaddr"));
-        QFont font1;
-        font1.setBold(true);
-        font1.setItalic(false);
-        font1.setWeight(75);
-        pushButton_flushipaddr->setFont(font1);
+        sizePolicy.setHeightForWidth(pushButton_flushipaddr->sizePolicy().hasHeightForWidth());
+        pushButton_flushipaddr->setSizePolicy(sizePolicy);
+        QFont font2;
+        font2.setBold(true);
+        font2.setItalic(false);
+        font2.setWeight(75);
+        pushButton_flushipaddr->setFont(font2);
         pushButton_flushipaddr->setStyleSheet(QLatin1String("QPushButton {\n"
 "    border: 1px solid #000000;\n"
 "    border-radius: 5px;\n"
@@ -91,19 +118,11 @@ public:
 
         gridLayout->addWidget(pushButton_flushipaddr, 0, 1, 1, 1);
 
-        comboBox = new QComboBox(centralWidget);
-        comboBox->setObjectName(QStringLiteral("comboBox"));
-        QFont font2;
-        font2.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font2.setPointSize(14);
-        comboBox->setFont(font2);
-        comboBox->setEditable(true);
-
-        gridLayout->addWidget(comboBox, 1, 0, 1, 1);
-
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setFont(font1);
+        sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy);
+        pushButton->setFont(font2);
         pushButton->setStyleSheet(QLatin1String("QPushButton {\n"
 "    border: 1px solid #000000;\n"
 "    border-radius: 5px;\n"
@@ -123,10 +142,22 @@ public:
 
         gridLayout->addWidget(pushButton, 1, 1, 1, 1);
 
+        comboBox = new QComboBox(centralWidget);
+        comboBox->setObjectName(QStringLiteral("comboBox"));
+        sizePolicy.setHeightForWidth(comboBox->sizePolicy().hasHeightForWidth());
+        comboBox->setSizePolicy(sizePolicy);
+        QFont font3;
+        font3.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font3.setPointSize(14);
+        comboBox->setFont(font3);
+        comboBox->setEditable(true);
+
+        gridLayout->addWidget(comboBox, 1, 0, 1, 1);
+
         textBrowser = new QTextBrowser(centralWidget);
         textBrowser->setObjectName(QStringLiteral("textBrowser"));
 
-        gridLayout->addWidget(textBrowser, 2, 0, 1, 2);
+        gridLayout->addWidget(textBrowser, 3, 0, 1, 2);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -148,6 +179,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\347\216\257\345\242\203\347\256\241\347\220\206\350\200\205", 0));
+        label_2->setText(QApplication::translate("MainWindow", "\345\234\260\345\235\200\350\256\276\345\256\232\350\277\207\346\273\244", 0));
         label->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\234\260\345\235\200,\350\257\267\351\200\211\346\213\251", 0));
         pushButton_flushipaddr->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260IP", 0));
         pushButton->setText(QApplication::translate("MainWindow", "\347\273\221  \345\256\232", 0));

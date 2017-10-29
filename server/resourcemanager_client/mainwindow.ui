@@ -177,7 +177,7 @@ QPushButton:disabled {
 }</string>
           </property>
           <property name="text">
-           <string>连接服务器获取资源</string>
+           <string>自动连接服务器获取资源</string>
           </property>
          </widget>
         </item>

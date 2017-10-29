@@ -9,7 +9,7 @@
 #include "kouling.h"
 #include <QtWidgets>
 #include "keybutton.h"
-
+#include <QUdpSocket>
 
 
 //单行保存的界面信息
@@ -69,7 +69,11 @@ public slots:
     QString AddYinHao(QString str);
 private slots:
     void on_pushButton_clicked();
-
+    //UPD Process
+    void initBroadcast();
+    void BroadcastGetIpCommand();
+    void processPengingDatagram();
+    void addIpItem(QByteArray data);
 private:
     QString logs;
 private:
@@ -90,6 +94,12 @@ private:
 
     QList<T_LocalUiForShow> lst_ShowUi;
     QList<T_LocalUiForShow>::iterator it_ShowUi;
+
+
+    //UDP process
+    /////////////
+     QUdpSocket * receiver;
+     QUdpSocket * sender;
 };
 
 
