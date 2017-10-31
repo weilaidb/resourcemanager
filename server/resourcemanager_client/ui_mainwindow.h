@@ -13,11 +13,13 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -35,17 +37,22 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QHBoxLayout *horizontalLayout_2;
-    QVBoxLayout *verticalLayout_resource;
-    QSpacerItem *horizontalSpacer_3;
+    QTextBrowser *textBrowser;
     QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_2;
+    QLineEdit *lineEdit_localname;
+    QLabel *label_3;
+    QLineEdit *lineEdit_ipfilter;
+    QCheckBox *checkBox_autosendlocalip;
+    QSpacerItem *horizontalSpacer_3;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
     QComboBox *comboBox;
     QSpacerItem *horizontalSpacer;
     QPushButton *pushButton;
     QSpacerItem *horizontalSpacer_2;
-    QTextBrowser *textBrowser;
+    QVBoxLayout *verticalLayout_resource;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -55,7 +62,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::WindowModal);
-        MainWindow->resize(500, 400);
+        MainWindow->resize(648, 400);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -67,36 +74,69 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        textBrowser = new QTextBrowser(centralWidget);
+        textBrowser->setObjectName(QStringLiteral("textBrowser"));
+
+        gridLayout->addWidget(textBrowser, 3, 0, 1, 1);
+
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        verticalLayout_resource = new QVBoxLayout();
-        verticalLayout_resource->setSpacing(2);
-        verticalLayout_resource->setObjectName(QStringLiteral("verticalLayout_resource"));
-        verticalLayout_resource->setSizeConstraint(QLayout::SetMinimumSize);
-        verticalLayout_resource->setContentsMargins(-1, -1, 0, -1);
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setMaximumSize(QSize(164, 27));
+        QFont font;
+        font.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
+        font.setPointSize(14);
+        label_2->setFont(font);
 
-        horizontalLayout_2->addLayout(verticalLayout_resource);
+        horizontalLayout_2->addWidget(label_2);
+
+        lineEdit_localname = new QLineEdit(centralWidget);
+        lineEdit_localname->setObjectName(QStringLiteral("lineEdit_localname"));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font1.setPointSize(14);
+        font1.setBold(false);
+        font1.setWeight(50);
+        lineEdit_localname->setFont(font1);
+
+        horizontalLayout_2->addWidget(lineEdit_localname);
+
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setMaximumSize(QSize(164, 27));
+        label_3->setFont(font);
+
+        horizontalLayout_2->addWidget(label_3);
+
+        lineEdit_ipfilter = new QLineEdit(centralWidget);
+        lineEdit_ipfilter->setObjectName(QStringLiteral("lineEdit_ipfilter"));
+        lineEdit_ipfilter->setFont(font1);
+
+        horizontalLayout_2->addWidget(lineEdit_ipfilter);
+
+        checkBox_autosendlocalip = new QCheckBox(centralWidget);
+        checkBox_autosendlocalip->setObjectName(QStringLiteral("checkBox_autosendlocalip"));
+
+        horizontalLayout_2->addWidget(checkBox_autosendlocalip);
 
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_2->addItem(horizontalSpacer_3);
 
 
-        gridLayout->addLayout(horizontalLayout_2, 5, 0, 1, 1);
+        verticalLayout->addLayout(horizontalLayout_2);
 
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         label = new QLabel(centralWidget);
         label->setObjectName(QStringLiteral("label"));
         label->setMaximumSize(QSize(164, 27));
-        QFont font;
-        font.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
-        font.setPointSize(14);
         label->setFont(font);
 
         horizontalLayout->addWidget(label);
@@ -109,10 +149,10 @@ public:
         sizePolicy1.setHeightForWidth(comboBox->sizePolicy().hasHeightForWidth());
         comboBox->setSizePolicy(sizePolicy1);
         comboBox->setMaximumSize(QSize(261, 27));
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font1.setPointSize(14);
-        comboBox->setFont(font1);
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font2.setPointSize(14);
+        comboBox->setFont(font2);
         comboBox->setEditable(true);
 
         horizontalLayout->addWidget(comboBox);
@@ -174,18 +214,19 @@ public:
 
         verticalLayout->addLayout(horizontalLayout);
 
+        verticalLayout_resource = new QVBoxLayout();
+        verticalLayout_resource->setSpacing(6);
+        verticalLayout_resource->setObjectName(QStringLiteral("verticalLayout_resource"));
 
-        gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
+        verticalLayout->addLayout(verticalLayout_resource);
 
-        textBrowser = new QTextBrowser(centralWidget);
-        textBrowser->setObjectName(QStringLiteral("textBrowser"));
 
-        gridLayout->addWidget(textBrowser, 6, 0, 1, 1);
+        gridLayout->addLayout(verticalLayout, 1, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 500, 23));
+        menuBar->setGeometry(QRect(0, 0, 648, 23));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -202,6 +243,11 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\347\216\257\345\242\203\345\256\242\346\210\267\347\253\257", 0));
+        label_2->setText(QApplication::translate("MainWindow", "\346\234\254\345\234\260\345\220\215\347\247\260", 0));
+        lineEdit_localname->setText(QApplication::translate("MainWindow", "S3-2", 0));
+        label_3->setText(QApplication::translate("MainWindow", "\345\234\260\345\235\200\350\277\207\346\273\244", 0));
+        lineEdit_ipfilter->setText(QString());
+        checkBox_autosendlocalip->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\345\217\221\351\200\201\346\234\254\346\234\272IP", 0));
         label->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\234\260\345\235\200", 0));
         pushButton->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\350\277\236\346\216\245\346\234\215\345\212\241\345\231\250\350\216\267\345\217\226\350\265\204\346\272\220", 0));
     } // retranslateUi

@@ -22,7 +22,7 @@ using namespace std;
 #define LOCAL_PORT 11121
 #define DEST_PORT 12811
 
-#define TRY_TIMES 10
+#define TRY_TIMES 2
 
 
 
@@ -84,7 +84,9 @@ void MainWindow::ReadHistorySettings()
     ui->comboBox->setEditText(m_settings.value("curipaddr").toString());
     ui->textBrowser->setText(m_settings.value("logs").toString());
     logs = m_settings.value("logs").toString();
-
+    ui->lineEdit_ipfilter->setText(m_settings.value("ipfilter").toString());
+    ui->lineEdit_localname->setText(m_settings.value("localname").toString());
+    ui->checkBox_autosendlocalip->setChecked(m_settings.value("autosendlocalip").toBool());
     qDebug() <<  "reading from history settings, of comboBox_keytips :" << m_settings.value("comboBox_keytips").toInt();
 
     this->restoreGeometry(m_settings.value("resourcemanagerclt_Geometry").toByteArray());
@@ -106,7 +108,9 @@ void MainWindow::WriteCurrentSettings()
     //    qDebug() <<  "writing from history settings, of comboBox_keytips :" << ui->comboBox_keytips->currentIndex();
 
     m_settings.setValue("resourcemanagerclt_Geometry", this->saveGeometry());
-
+    m_settings.setValue("ipfilter", ui->lineEdit_ipfilter->text());
+    m_settings.setValue("localname", ui->lineEdit_localname->text());
+    m_settings.setValue("autosendlocalip", ui->checkBox_autosendlocalip->isChecked());
     //    qDebug() << "setting filename:" << m_settings.fileName();
 
 }
@@ -273,7 +277,16 @@ void MainWindow::readfromremote(QString cltmsg, void*)
         //        setLayout(ui->verticalLayout_resource);
 
 
-        ShowTipsInfoWithShowTime(str_china("更新完成"), 1500);
+        ShowTipsInfoWithShowTime(str_china("更新完成"), 500);
+
+        static quint8 updatelocalip = 0;
+        if(!updatelocalip)
+        {
+            //更新本机IP地址数据
+            Proc_RequestSrcItem(QString("%1%2").arg(QString::fromLocal8Bit("申请"))
+                                .arg(ui->lineEdit_localname->text()));
+            updatelocalip = 1;
+        }
     }
 }
 
@@ -370,6 +383,7 @@ void MainWindow::showResources(QString cltmsg)
                      tmp.usr,
                      tmp.notice);
     }
+
 
 }
 
@@ -605,7 +619,15 @@ void MainWindow::Proc_RequestUpdate(T_LocalUiForShow &rowUi)
 
     T_ResourceUse tmp;
     tmp.devname = rowUi.pDevName->text();
-    tmp.devip   = rowUi.pDevIP->text();
+    if(tmp.devname.contains(ui->lineEdit_localname->text(), Qt::CaseInsensitive))
+    {
+        if(ui->checkBox_autosendlocalip->isChecked())
+            tmp.devip   = GetFilteredIpAddr();
+        else
+            tmp.devip   = rowUi.pDevIP->text();
+    }
+    else
+        tmp.devip   = rowUi.pDevIP->text();
     tmp.netip   = rowUi.pNetIP->text();
     tmp.time    = rowUi.pTime->currentText();
     tmp.usr     = rowUi.pUsr->currentText();
@@ -750,3 +772,94 @@ void MainWindow::addIpItem(QByteArray data)
 //    mlistWidget->insertItem(1, lst1);
 }
 
+
+//void MainWindow::AutoBindAddress()
+//{
+//    QString ipaddr = GetFilteredIpAddr();
+//    if(!ipaddr.isEmpty())
+//    {
+//        ui->comboBox->setCurrentText(ipaddr);
+//        on_pushButton_clicked();
+//    }
+//}
+
+
+QString MainWindow::GetFilteredIpAddr()
+{
+    QList<QString> machineiplist = Getifconfig();
+    foreach (QString ipaddr, machineiplist) {
+        if(ipaddr.contains(ui->lineEdit_ipfilter->text()))
+            return ipaddr;
+    }
+    return "";
+}
+
+
+//qt实现类似于ifconfig -a功能
+QList<QString> MainWindow::Getifconfig(void)
+{
+    QStringList envVariables;
+    QByteArray username;
+    QList<QHostAddress> broadcastAddresses;
+    QList<QString> ipAddresses;
+    QString ipAddressesstr;
+
+    envVariables << "USERNAME.*" <<"USER.*" <<"USERDOMAIN.*"
+                 <<"HOSTNAME.*" << "DOMAINNAME.*";
+    QStringList environment = QProcess::systemEnvironment();
+    foreach (QString string, envVariables) {
+        int index = environment.indexOf(QRegExp(string));
+        if(-1 != index){
+            QStringList stringList = environment.at(index).split("=");
+            if(stringList.size() == 2){
+                username = stringList.at(1).toUtf8();
+                qDebug() << username.data();
+                break;
+            }
+        }
+    }
+
+    broadcastAddresses.clear();
+    ipAddresses.clear();
+    qDebug() << "Interface numbers:"
+             <<QNetworkInterface::allInterfaces().count();
+
+    foreach (QNetworkInterface netinterface,
+             QNetworkInterface::allInterfaces()) {
+        qDebug() << "Interface name:" << netinterface.name() <<endl
+                 <<"Interface hardwareAddress:"
+                <<netinterface.hardwareAddress()<<endl
+               <<"entry numbers:" << netinterface.addressEntries().count();
+        foreach (QNetworkAddressEntry entry, netinterface.addressEntries()) {
+            QHostAddress broadcastAddress = entry.broadcast();
+            qDebug() << "entry ip:" << entry.ip()
+                     <<"entry netmask:" <<entry.netmask();
+            qDebug() << "ip addr:" << entry.ip().toString();
+            //            ipAddressesstr = entry.ip().toString();
+            //            if(ipAddressesstr.contains("192.168"))
+            //            {
+            //                return ipAddressesstr;
+            //            }
+            if(broadcastAddress != QHostAddress::Null){
+                broadcastAddresses << broadcastAddress;
+                ipAddresses << entry.ip().toString();
+            }
+        }
+
+    }
+    return ipAddresses;
+}
+
+
+
+
+
+
+void MainWindow::on_checkBox_autosendlocalip_toggled(bool checked)
+{
+    //更新本机IP地址数据
+    QString restext = QString("%1%2").arg(QString::fromLocal8Bit("申请"))
+            .arg(ui->lineEdit_localname->text());
+    qDebug() << "Requsest Text : " << restext ;
+    Proc_RequestSrcItem(restext);
+}

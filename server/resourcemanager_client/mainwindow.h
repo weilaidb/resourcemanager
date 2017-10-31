@@ -43,6 +43,9 @@ public:
     int CheckIPAddr(QString ipaddr);
     void newConnect(QString ipaddr);
 //    void initClientReceive();
+    QString GetFilteredIpAddr();
+    QList<QString> Getifconfig(void);
+
 
     void resizeEvent(QResizeEvent* event);
     QStringList getusrlist();
@@ -67,6 +70,8 @@ public slots:
     void setPushBtnEnable(QString st);
 
     QString AddYinHao(QString str);
+
+
 private slots:
     void on_pushButton_clicked();
     //UPD Process
@@ -74,6 +79,8 @@ private slots:
     void BroadcastGetIpCommand();
     void processPengingDatagram();
     void addIpItem(QByteArray data);
+    void on_checkBox_autosendlocalip_toggled(bool checked);
+
 private:
     QString logs;
 private:
